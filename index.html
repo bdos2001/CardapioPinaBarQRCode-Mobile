@@ -5,174 +5,233 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pina Bar - Cardápio</title>
     <link rel="stylesheet" href="main.css">
-    <link rel="preload" href="fonts/handwritten-font.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-    <!-- Favicon PB com P amarelo e B branco -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23000'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-size='32' font-family='Arial, sans-serif' font-weight='bold'%3E%3Ctspan fill='%23FFD600'%3EP%3C/tspan%3E%3Ctspan fill='white'%3EB%3C/tspan%3E%3C/text%3E%3C/svg%3E">
+    <style>
+        /* Modal idioma */
+        #lang-modal {
+            position: fixed;
+            z-index: 1000;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #lang-modal-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+        }
+        #lang-modal button {
+            margin: 0 10px;
+            font-size: 1.2em;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            background: #f5f5f5;
+            transition: background 0.2s;
+        }
+        #lang-modal button:hover {
+            background: #ffe082;
+        }
+        /* Barra de pesquisa */
+        #search-bar {
+            display: flex;
+            justify-content: center;
+            margin: 16px 0 8px 0;
+        }
+        #search-input {
+            width: 90%;
+            max-width: 400px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+    </style>
 </head>
-<body>
+<body class="static-bg">
+
+<!-- Modal de seleção de idioma -->
+<div id="lang-modal">
+    <div id="lang-modal-content">
+        <div style="font-size:1.2em; margin-bottom:18px;">Escolha o idioma / Choose language / Elija el idioma</div>
+        <button onclick="chooseLang('pt')">🇵🇹 Português</button>
+        <button onclick="chooseLang('en')">🇬🇧 English</button>
+        <button onclick="chooseLang('es')">🇪🇸 Español</button>
+    </div>
+</div>
+
+<!-- Barra de pesquisa -->
+<div id="search-bar">
+    <input id="search-input" type="text" placeholder="Pesquisar artigo..." oninput="filterMenu()" autocomplete="off">
+</div>
 
 <header>
-    <h1>Pina Bar - Cardápio</h1>
+    <h1 id="main-title">Pina Bar - Cardápio</h1>
 </header>
 
-<div class="section">
-    <h2>Cafetaria</h2>
-    <div class="item"><span class="item-name">Café</span><span class="item-price">0,90€</span></div>
-    <div class="item"><span class="item-name">Café com gelo</span><span class="item-price">1,25€</span></div>
-    <div class="item"><span class="item-name">Chá</span><span class="item-price">1,20€</span></div>
-    <div class="item"><span class="item-name">Meia de leite</span><span class="item-price">1,30€</span></div>
-    <div class="item"><span class="item-name">Galão</span><span class="item-price">1,35€</span></div>
-    <div class="item"><span class="item-name">Carioca de café ou limão</span><span class="item-price">0,80€</span></div>
-    <div class="item"><span class="item-name">Carioca duplo</span><span class="item-price">1,50€</span></div>
-    <div class="item"><span class="item-name">Cappuccino</span><span class="item-price">2,10€</span></div>
-    <div class="item"><span class="item-name">Chocolate quente</span><span class="item-price">1,50€</span></div>
-    <div class="item"><span class="item-name">UCAL</span><span class="item-price">1,50€</span></div>
-    <div class="item"><span class="item-name">Pingo</span><span class="item-price">1,20€</span></div>
+<div id="menu-content" class="section">
+    <h2 data-key="cafeteria">Cafetaria</h2>
+    <div class="item"><span class="item-name" data-key="cafe">Café</span><span class="item-price">0,90€</span></div>
+    <div class="item"><span class="item-name" data-key="cafe_gelo">Café com gelo</span><span class="item-price">1,25€</span></div>
+    <div class="item"><span class="item-name" data-key="cha">Chá</span><span class="item-price">1,20€</span></div>
+    <div class="item"><span class="item-name" data-key="meia_leite">Meia de leite</span><span class="item-price">1,30€</span></div>
+    <div class="item"><span class="item-name" data-key="galao">Galão</span><span class="item-price">1,35€</span></div>
+    <div class="item"><span class="item-name" data-key="carioca">Carioca de café ou limão</span><span class="item-price">0,80€</span></div>
+    <div class="item"><span class="item-name" data-key="carioca_duplo">Carioca duplo</span><span class="item-price">1,50€</span></div>
+    <div class="item"><span class="item-name" data-key="cappuccino">Cappuccino</span><span class="item-price">2,10€</span></div>
+    <div class="item"><span class="item-name" data-key="chocolate_quente">Chocolate quente</span><span class="item-price">1,50€</span></div>
+    <div class="item"><span class="item-name" data-key="ucal">UCAL</span><span class="item-price">1,50€</span></div>
+    <div class="item"><span class="item-name" data-key="pingo">Pingo</span><span class="item-price">1,20€</span></div>
 </div>
 
 <div class="section">
-    <h2>Águas & Sumos</h2>
-    <div class="item"><span class="item-name">Água sem gás</span><span class="item-price">1,00€</span></div>
-    <div class="item"><span class="item-name">Água com gás</span><span class="item-price">1,00€</span></div>
-    <div class="item"><span class="item-name">Água sabores</span><span class="item-price">1,20€</span></div>
-    <div class="item"><span class="item-name">Sumos em lata</span><span class="item-price">1,60€</span></div>
-    <div class="item"><span class="item-name">Sumos nectar</span><span class="item-price">1,50€</span></div>
-    <div class="item"><span class="item-name">Sumos sem gás</span><span class="item-price">1,50€</span></div>
-    <div class="item"><span class="item-name">Sumo natural</span><span class="item-price">1,80€</span></div>
-    <div class="item"><span class="item-name">Plemo</span><span class="item-price">1,40€</span></div>
-    <div class="item"><span class="item-name">Ginger Ale</span><span class="item-price">1,40€</span></div>
-    <div class="item"><span class="item-name">Tónica</span><span class="item-price">1,50€</span></div>
+    <h2 data-key="aguas_sumos">Águas & Sumos</h2>
+    <div class="item"><span class="item-name" data-key="agua_sem_gas">Água sem gás</span><span class="item-price">1,00€</span></div>
+    <div class="item"><span class="item-name" data-key="agua_com_gas">Água com gás</span><span class="item-price">1,00€</span></div>
+    <div class="item"><span class="item-name" data-key="agua_sabores">Água sabores</span><span class="item-price">1,20€</span></div>
+    <div class="item"><span class="item-name" data-key="sumos_lata">Sumos em lata</span><span class="item-price">1,60€</span></div>
+    <div class="item"><span class="item-name" data-key="sumos_nectar">Sumos nectar</span><span class="item-price">1,50€</span></div>
+    <div class="item"><span class="item-name" data-key="sumos_sem_gas">Sumos sem gás</span><span class="item-price">1,50€</span></div>
+    <div class="item"><span class="item-name" data-key="sumo_natural">Sumo natural</span><span class="item-price">1,80€</span></div>
+    <div class="item"><span class="item-name" data-key="plemo">Plemo</span><span class="item-price">1,40€</span></div>
+    <div class="item"><span class="item-name" data-key="ginger_ale">Ginger Ale</span><span class="item-price">1,40€</span></div>
+    <div class="item"><span class="item-name" data-key="tonica">Tónica</span><span class="item-price">1,50€</span></div>
 </div>
 
 <div class="section">
-    <h2>Snacks & Petiscos</h2>
-    <div class="item"><span class="item-name">Cachorro</span><span class="item-price">3,50€</span></div>
-    <div class="item"><span class="item-name">Cachorro especial</span><span class="item-price">4,00€</span></div>
-    <div class="item"><span class="item-name">Tremoços</span><span class="item-price">1,40€</span></div>
-    <div class="item"><span class="item-name">Amendoins</span><span class="item-price">0,80€</span></div>
-    <div class="item"><span class="item-name">Chocolates</span><span class="item-price">1,10€</span></div>
-    <div class="item"><span class="item-name">Gomas</span><span class="item-price">1,20€</span></div>
-    <div class="item"><span class="item-name">Batata de pacote</span><span class="item-price">0,80€</span></div>
-    <div class="item"><span class="item-name">Chouriço assado com pão saloio</span><span class="item-price">3,00€</span></div>
+    <h2 data-key="snacks_petiscos">Snacks & Petiscos</h2>
+    <div class="item"><span class="item-name" data-key="cachorro">Cachorro</span><span class="item-price">3,50€</span></div>
+    <div class="item"><span class="item-name" data-key="cachorro_especial">Cachorro especial</span><span class="item-price">4,00€</span></div>
+    <div class="item"><span class="item-name" data-key="tremocos">Tremoços</span><span class="item-price">1,40€</span></div>
+    <div class="item"><span class="item-name" data-key="amendoins">Amendoins</span><span class="item-price">0,80€</span></div>
+    <div class="item"><span class="item-name" data-key="chocolates">Chocolates</span><span class="item-price">1,10€</span></div>
+    <div class="item"><span class="item-name" data-key="gomas">Gomas</span><span class="item-price">1,20€</span></div>
+    <div class="item"><span class="item-name" data-key="batata_pacote">Batata de pacote</span><span class="item-price">0,80€</span></div>
+    <div class="item"><span class="item-name" data-key="chourico_assado">Chouriço assado com pão saloio</span><span class="item-price">3,00€</span></div>
 </div>
 
 <div class="section">
-    <h2>Cerveja</h2>
-    <div class="item"><span class="item-name">Fino</span><span class="item-price">1,40€</span></div>
-    <div class="item"><span class="item-name">Caneca</span><span class="item-price">2,50€</span></div>
-    <div class="item"><span class="item-name">Tango</span><span class="item-price">2,40€</span></div>
-    <div class="item"><span class="item-name">Favalos com cerveja</span><span class="item-price">1,50€</span></div>
-    <div class="item"><span class="item-name">Mini</span><span class="item-price">1,90€</span></div>
-    <div class="item"><span class="item-name">0,33cl branca/preta</span><span class="item-price">1,90€</span></div>
-    <div class="item"><span class="item-name">Bohemia</span><span class="item-price">2,50€</span></div>
-    <div class="item"><span class="item-name">Heineken</span><span class="item-price">1,50€</span></div>
-    <div class="item"><span class="item-name">Desperados</span><span class="item-price">2,50€</span></div>
-    <div class="item"><span class="item-name">Bandida do Pomar</span><span class="item-price">2,20€</span></div>
+    <h2 data-key="cerveja">Cerveja</h2>
+    <div class="item"><span class="item-name" data-key="fino">Fino</span><span class="item-price">1,40€</span></div>
+    <div class="item"><span class="item-name" data-key="caneca">Caneca</span><span class="item-price">2,50€</span></div>
+    <div class="item"><span class="item-name" data-key="tango">Tango</span><span class="item-price">2,40€</span></div>
+    <div class="item"><span class="item-name" data-key="favalos_cerveja">Favalos com cerveja</span><span class="item-price">1,50€</span></div>
+    <div class="item"><span class="item-name" data-key="mini">Mini</span><span class="item-price">1,90€</span></div>
+    <div class="item"><span class="item-name" data-key="cerveja_33">0,33cl branca/preta</span><span class="item-price">1,90€</span></div>
+    <div class="item"><span class="item-name" data-key="bohemia">Bohemia</span><span class="item-price">2,50€</span></div>
+    <div class="item"><span class="item-name" data-key="heineken">Heineken</span><span class="item-price">1,50€</span></div>
+    <div class="item"><span class="item-name" data-key="desperados">Desperados</span><span class="item-price">2,50€</span></div>
+    <div class="item"><span class="item-name" data-key="bandida_pomar">Bandida do Pomar</span><span class="item-price">2,20€</span></div>
 </div>
 
 <div class="section">
-    <h2>Whiskey</h2>
-    <div class="item"><span class="item-name">Black Label</span><span class="item-price">6,00€</span></div>
-    <div class="item"><span class="item-name">J&amp;B 15 anos</span><span class="item-price">5,00€</span></div>
-    <div class="item"><span class="item-name">Jack Daniel's</span><span class="item-price">5,50€</span></div>
-    <div class="item"><span class="item-name">Jameson</span><span class="item-price">4,50€</span></div>
-    <div class="item"><span class="item-name">Red Label</span><span class="item-price">4,50€</span></div>
-    <div class="item"><span class="item-name">Cutty Sark</span><span class="item-price">4,50€</span></div>
-    <div class="item"><span class="item-name">J&amp;B Bravo</span><span class="item-price">4,50€</span></div>
-    <div class="item"><span class="item-name">William Lawson</span><span class="item-price">4,50€</span></div>
+    <h2 data-key="whiskey">Whiskey</h2>
+    <div class="item"><span class="item-name" data-key="black_label">Black Label</span><span class="item-price">6,00€</span></div>
+    <div class="item"><span class="item-name" data-key="jb_15">J&amp;B 15 anos</span><span class="item-price">5,00€</span></div>
+    <div class="item"><span class="item-name" data-key="jack_daniels">Jack Daniel's</span><span class="item-price">5,50€</span></div>
+    <div class="item"><span class="item-name" data-key="jameson">Jameson</span><span class="item-price">4,50€</span></div>
+    <div class="item"><span class="item-name" data-key="red_label">Red Label</span><span class="item-price">4,50€</span></div>
+    <div class="item"><span class="item-name" data-key="cutty_sark">Cutty Sark</span><span class="item-price">4,50€</span></div>
+    <div class="item"><span class="item-name" data-key="jb_bravo">J&amp;B Bravo</span><span class="item-price">4,50€</span></div>
+    <div class="item"><span class="item-name" data-key="william_lawson">William Lawson</span><span class="item-price">4,50€</span></div>
 </div>
 
 <div class="section">
-    <h2>Aguardentes</h2>
-    <div class="item"><span class="item-name">Macieira</span><span class="item-price">2,50€</span></div>
-    <div class="item"><span class="item-name">Croft</span><span class="item-price">2,50€</span></div>
-    <div class="item"><span class="item-name">CRF</span><span class="item-price">4,50€</span></div>
+    <h2 data-key="aguardentes">Aguardentes</h2>
+    <div class="item"><span class="item-name" data-key="macieira">Macieira</span><span class="item-price">2,50€</span></div>
+    <div class="item"><span class="item-name" data-key="croft">Croft</span><span class="item-price">2,50€</span></div>
+    <div class="item"><span class="item-name" data-key="crf">CRF</span><span class="item-price">4,50€</span></div>
 </div>
 
 <div class="section">
-    <h2>Brandys & Espirituosas</h2>
-    <div class="item"><span class="item-name">Safari</span><span class="item-price">4,50€</span></div>
-    <div class="item"><span class="item-name">Malibu</span><span class="item-price">4,50€</span></div>
-    <div class="item"><span class="item-name">Beirão</span><span class="item-price">4,00€</span></div>
-    <div class="item"><span class="item-name">Amêndoa amarga</span><span class="item-price">3,00€</span></div>
-    <div class="item"><span class="item-name">Porto Velho</span><span class="item-price">1,70€</span></div>
-    <div class="item"><span class="item-name">Porto Novo</span><span class="item-price">2,20€</span></div>
-    <div class="item"><span class="item-name">Martini Rosso</span><span class="item-price">2,20€</span></div>
-    <div class="item"><span class="item-name">Martini Branco</span><span class="item-price">2,20€</span></div>
-    <div class="item"><span class="item-name">Vodka</span><span class="item-price">4,50€</span></div>
-    <div class="item"><span class="item-name">Vodka preta</span><span class="item-price">4,50€</span></div>
-    <div class="item"><span class="item-name">Bacardi</span><span class="item-price">4,50€</span></div>
-    <div class="item"><span class="item-name">Gordons</span><span class="item-price">4,50€</span></div>
-    <div class="item"><span class="item-name">Tanqueray</span><span class="item-price">5,50€</span></div>
-    <div class="item"><span class="item-name">Bulldog</span><span class="item-price">6,50€</span></div>
-    <div class="item"><span class="item-name">Capirinha</span><span class="item-price">4,50€</span></div>
-    <div class="item"><span class="item-name">Caipiroska</span><span class="item-price">4,80€</span></div>
-    <div class="item"><span class="item-name">Mojito</span><span class="item-price">5,00€</span></div>
-    <div class="item"><span class="item-name">Cuba-libre</span><span class="item-price">5,00€</span></div>
-    <div class="item"><span class="item-name">Pina Colada</span><span class="item-price">6,00€</span></div>
-    <div class="item"><span class="item-name">Martini Expresso</span><span class="item-price">6,00€</span></div>
-    <div class="item"><span class="item-name">Daquiri de Morango</span><span class="item-price">6,00€</span></div>
-    <div class="item"><span class="item-name">Shot</span><span class="item-price">2,00€</span></div>
-    <div class="item"><span class="item-name">Red Bull</span><span class="item-price">3,00€</span></div>
-    <div class="item"><span class="item-name">Monster</span><span class="item-price">3,20€</span></div>
-    <div class="item"><span class="item-name">Le Coq</span><span class="item-price">3,00€</span></div>
-    <div class="item"><span class="item-name">Smirnoff Ice</span><span class="item-price">3,00€</span></div>
+    <h2 data-key="brandys_espirituosas">Brandys & Espirituosas</h2>
+    <div class="item"><span class="item-name" data-key="safari">Safari</span><span class="item-price">4,50€</span></div>
+    <div class="item"><span class="item-name" data-key="malibu">Malibu</span><span class="item-price">4,50€</span></div>
+    <div class="item"><span class="item-name" data-key="beirao">Beirão</span><span class="item-price">4,00€</span></div>
+    <div class="item"><span class="item-name" data-key="amendoa_amarga">Amêndoa amarga</span><span class="item-price">3,00€</span></div>
+    <div class="item"><span class="item-name" data-key="porto_velho">Porto Velho</span><span class="item-price">1,70€</span></div>
+    <div class="item"><span class="item-name" data-key="porto_novo">Porto Novo</span><span class="item-price">2,20€</span></div>
+    <div class="item"><span class="item-name" data-key="martini_rosso">Martini Rosso</span><span class="item-price">2,20€</span></div>
+    <div class="item"><span class="item-name" data-key="martini_branco">Martini Branco</span><span class="item-price">2,20€</span></div>
+    <div class="item"><span class="item-name" data-key="vodka">Vodka</span><span class="item-price">4,50€</span></div>
+    <div class="item"><span class="item-name" data-key="vodka_preta">Vodka preta</span><span class="item-price">4,50€</span></div>
+    <div class="item"><span class="item-name" data-key="bacardi">Bacardi</span><span class="item-price">4,50€</span></div>
+    <div class="item"><span class="item-name" data-key="gordons">Gordons</span><span class="item-price">4,50€</span></div>
+    <div class="item"><span class="item-name" data-key="tanqueray">Tanqueray</span><span class="item-price">5,50€</span></div>
+    <div class="item"><span class="item-name" data-key="bulldog">Bulldog</span><span class="item-price">6,50€</span></div>
+    <div class="item"><span class="item-name" data-key="capirinha">Capirinha</span><span class="item-price">4,50€</span></div>
+    <div class="item"><span class="item-name" data-key="caipiroska">Caipiroska</span><span class="item-price">4,80€</span></div>
+    <div class="item"><span class="item-name" data-key="mojito">Mojito</span><span class="item-price">5,00€</span></div>
+    <div class="item"><span class="item-name" data-key="cuba_libre">Cuba-libre</span><span class="item-price">5,00€</span></div>
+    <div class="item"><span class="item-name" data-key="pina_colada">Pina Colada</span><span class="item-price">6,00€</span></div>
+    <div class="item"><span class="item-name" data-key="martini_expresso">Martini Expresso</span><span class="item-price">6,00€</span></div>
+    <div class="item"><span class="item-name" data-key="daquiri_morango">Daquiri de Morango</span><span class="item-price">6,00€</span></div>
+    <div class="item"><span class="item-name" data-key="shot">Shot</span><span class="item-price">2,00€</span></div>
+    <div class="item"><span class="item-name" data-key="red_bull">Red Bull</span><span class="item-price">3,00€</span></div>
+    <div class="item"><span class="item-name" data-key="monster">Monster</span><span class="item-price">3,20€</span></div>
+    <div class="item"><span class="item-name" data-key="le_coq">Le Coq</span><span class="item-price">3,00€</span></div>
+    <div class="item"><span class="item-name" data-key="smirnoff_ice">Smirnoff Ice</span><span class="item-price">3,00€</span></div>
 </div>
 
 <div class="section">
-    <h2>Sangrias</h2>
-    <div class="item"><span class="item-name">Branca</span><span class="item-price">9,00€</span></div>
-    <div class="item"><span class="item-name">Tinta</span><span class="item-price">9,00€</span></div>
+    <h2 data-key="sangrias">Sangrias</h2>
+    <div class="item"><span class="item-name" data-key="sangria_branca">Branca</span><span class="item-price">9,00€</span></div>
+    <div class="item"><span class="item-name" data-key="sangria_tinta">Tinta</span><span class="item-price">9,00€</span></div>
 </div>
 
 <div class="section">
-    <h2>Crepes & Gofres</h2>
-    <div class="item"><span class="item-name">Crepe simples com açúcar e canela</span><span class="item-price">1,20€</span></div>
-    <div class="item"><span class="item-name">Crepe de chocolate, morango ou caramelo com topping</span><span class="item-price">1,50€</span></div>
-    <div class="item"><span class="item-name">Crepe de chocolate, morango ou caramelo com topping e chantilly</span><span class="item-price">1,80€</span></div>
-    <div class="item"><span class="item-name">Gofre com chantilly</span><span class="item-price">1,30€</span></div>
-    <div class="item"><span class="item-name">Gofre chocolate, morango ou caramelo</span><span class="item-price">1,50€</span></div>
-    <div class="item"><span class="item-name">Gofre de chocolate, morango ou caramelo com chantilly</span><span class="item-price">1,80€</span></div>
+    <h2 data-key="crepes_gofres">Crepes & Gofres</h2>
+    <div class="item"><span class="item-name" data-key="crepe_simples">Crepe simples com açúcar e canela</span><span class="item-price">1,20€</span></div>
+    <div class="item"><span class="item-name" data-key="crepe_topping">Crepe de chocolate, morango ou caramelo com topping</span><span class="item-price">1,50€</span></div>
+    <div class="item"><span class="item-name" data-key="crepe_topping_chantilly">Crepe de chocolate, morango ou caramelo com topping e chantilly</span><span class="item-price">1,80€</span></div>
+    <div class="item"><span class="item-name" data-key="gofre_chantilly">Gofre com chantilly</span><span class="item-price">1,30€</span></div>
+    <div class="item"><span class="item-name" data-key="gofre_topping">Gofre chocolate, morango ou caramelo</span><span class="item-price">1,50€</span></div>
+    <div class="item"><span class="item-name" data-key="gofre_topping_chantilly">Gofre de chocolate, morango ou caramelo com chantilly</span><span class="item-price">1,80€</span></div>
 </div>
 
 <div class="section">
-    <h2>Sandes & Tostas</h2>
-    <div class="item"><span class="item-name">Sande americana</span><span class="item-price">4,00€</span></div>
-    <div class="item"><span class="item-name">Sande de atum</span><span class="item-price">3,80€</span></div>
-    <div class="item"><span class="item-name">Sande de delícias do mar</span><span class="item-price">3,80€</span></div>
-    <div class="item"><span class="item-name">Sande de presunto</span><span class="item-price">4,20€</span></div>
-    <div class="item"><span class="item-name">Sande de queijo e presunto</span><span class="item-price">4,60€</span></div>
-    <div class="item"><span class="item-name">Hambúrguer Clássico</span><span class="item-price">4,00€</span></div>
-    <div class="item"><span class="item-name">Hambúrguer Crunch</span><span class="item-price">5,00€</span></div>
-    <div class="item"><span class="item-name">Tosta de queijo</span><span class="item-price">2,00€</span></div>
-    <div class="item"><span class="item-name">Tosta de queijo com fiambre</span><span class="item-price">2,30€</span></div>
-    <div class="item"><span class="item-name">Tosta mista em pão saloio</span><span class="item-price">2,80€</span></div>
+    <h2 data-key="sandes_tostas">Sandes & Tostas</h2>
+    <div class="item"><span class="item-name" data-key="sande_americana">Sande americana</span><span class="item-price">4,00€</span></div>
+    <div class="item"><span class="item-name" data-key="sande_atum">Sande de atum</span><span class="item-price">3,80€</span></div>
+    <div class="item"><span class="item-name" data-key="sande_delicias_mar">Sande de delícias do mar</span><span class="item-price">3,80€</span></div>
+    <div class="item"><span class="item-name" data-key="sande_presunto">Sande de presunto</span><span class="item-price">4,20€</span></div>
+    <div class="item"><span class="item-name" data-key="sande_queijo_presunto">Sande de queijo e presunto</span><span class="item-price">4,60€</span></div>
+    <div class="item"><span class="item-name" data-key="hamburguer_classico">Hambúrguer Clássico</span><span class="item-price">4,00€</span></div>
+    <div class="item"><span class="item-name" data-key="hamburguer_crunch">Hambúrguer Crunch</span><span class="item-price">5,00€</span></div>
+    <div class="item"><span class="item-name" data-key="tosta_queijo">Tosta de queijo</span><span class="item-price">2,00€</span></div>
+    <div class="item"><span class="item-name" data-key="tosta_queijo_fiambre">Tosta de queijo com fiambre</span><span class="item-price">2,30€</span></div>
+    <div class="item"><span class="item-name" data-key="tosta_mista_pao_saloio">Tosta mista em pão saloio</span><span class="item-price">2,80€</span></div>
 </div>
 
 <div class="section">
-    <h2>Pão & Pastelaria</h2>
-    <div class="item"><span class="item-name">Torrada de pão saloio</span><span class="item-price">1,50€</span></div>
-    <div class="item"><span class="item-name">½ Torrada de pão saloio</span><span class="item-price">0,90€</span></div>
-    <div class="item"><span class="item-name">Pão de alho</span><span class="item-price">1,80€</span></div>
-    <div class="item"><span class="item-name">Pão de alho especial</span><span class="item-price">2,60€</span></div>
-    <div class="item"><span class="item-name">Pão de alho com queijo</span><span class="item-price">2,10€</span></div>
-    <div class="item"><span class="item-name">Pão davó com manteiga</span><span class="item-price">0,80€</span></div>
-    <div class="item"><span class="item-name">Pão davó com fiambre</span><span class="item-price">1,20€</span></div>
-    <div class="item"><span class="item-name">Pão davó com queijo</span><span class="item-price">1,20€</span></div>
-    <div class="item"><span class="item-name">Pão davó com queijo e fiambre</span><span class="item-price">1,40€</span></div>
-    <div class="item"><span class="item-name">Sagadinhos</span><span class="item-price">1,00€</span></div>
-    <div class="item"><span class="item-name">Bolos diversos</span><span class="item-price">1,40€</span></div>
-    <div class="item"><span class="item-name">Pankeke</span><span class="item-price">1,10€</span></div>
-    <div class="item"><span class="item-name">Croissants</span><span class="item-price">1,10€</span></div>
-    <div class="item"><span class="item-name">Croissant com manteiga</span><span class="item-price">1,30€</span></div>
-    <div class="item"><span class="item-name">Croissant com queijo</span><span class="item-price">1,50€</span></div>
-    <div class="item"><span class="item-name">Croissant misto</span><span class="item-price">1,80€</span></div>
+    <h2 data-key="pao_pastelaria">Pão & Pastelaria</h2>
+    <div class="item"><span class="item-name" data-key="torrada_pao_saloio">Torrada de pão saloio</span><span class="item-price">1,50€</span></div>
+    <div class="item"><span class="item-name" data-key="meia_torrada_pao_saloio">½ Torrada de pão saloio</span><span class="item-price">0,90€</span></div>
+    <div class="item"><span class="item-name" data-key="pao_alho">Pão de alho</span><span class="item-price">1,80€</span></div>
+    <div class="item"><span class="item-name" data-key="pao_alho_especial">Pão de alho especial</span><span class="item-price">2,60€</span></div>
+    <div class="item"><span class="item-name" data-key="pao_alho_queijo">Pão de alho com queijo</span><span class="item-price">2,10€</span></div>
+    <div class="item"><span class="item-name" data-key="pao_davo_manteiga">Pão davó com manteiga</span><span class="item-price">0,80€</span></div>
+    <div class="item"><span class="item-name" data-key="pao_davo_fiambre">Pão davó com fiambre</span><span class="item-price">1,20€</span></div>
+    <div class="item"><span class="item-name" data-key="pao_davo_queijo">Pão davó com queijo</span><span class="item-price">1,20€</span></div>
+    <div class="item"><span class="item-name" data-key="pao_davo_queijo_fiambre">Pão davó com queijo e fiambre</span><span class="item-price">1,40€</span></div>
+    <div class="item"><span class="item-name" data-key="sagadinhos">Sagadinhos</span><span class="item-price">1,00€</span></div>
+    <div class="item"><span class="item-name" data-key="bolos_diversos">Bolos diversos</span><span class="item-price">1,40€</span></div>
+    <div class="item"><span class="item-name" data-key="pankeke">Pankeke</span><span class="item-price">1,10€</span></div>
+    <div class="item"><span class="item-name" data-key="croissants">Croissants</span><span class="item-price">1,10€</span></div>
+    <div class="item"><span class="item-name" data-key="croissant_manteiga">Croissant com manteiga</span><span class="item-price">1,30€</span></div>
+    <div class="item"><span class="item-name" data-key="croissant_queijo">Croissant com queijo</span><span class="item-price">1,50€</span></div>
+    <div class="item"><span class="item-name" data-key="croissant_misto">Croissant misto</span><span class="item-price">1,80€</span></div>
 </div>
 
 <footer>
     <div style="text-align: center;">
-        <span>I.V.A. incluído à taxa legal</span><br>
-        © 2025 Pina Bar. Todos os direitos reservados.
+        <span id="iva-text">I.V.A. incluído à taxa legal</span><br>
+        <span id="copyright">© 2025 Pina Bar. Todos os direitos reservados.</span>
         <br>
         <span style="vertical-align: middle; margin-left: 0;">
             <!-- Facebook SVG com link -->
@@ -193,6 +252,406 @@
         </span>
     </div>
 </footer>
+
+<script>
+const translations = {
+  pt: {
+    title: "Pina Bar - Cardápio",
+    main_title: "Pina Bar - Cardápio",
+    iva: "I.V.A. incluído à taxa legal",
+    copyright: "© 2025 Pina Bar. Todos os direitos reservados.",
+    cafeteria: "Cafetaria",
+    cafe: "Café",
+    cafe_gelo: "Café com gelo",
+    cha: "Chá",
+    meia_leite: "Meia de leite",
+    galao: "Galão",
+    carioca: "Carioca de café ou limão",
+    carioca_duplo: "Carioca duplo",
+    cappuccino: "Cappuccino",
+    chocolate_quente: "Chocolate quente",
+    ucal: "UCAL",
+    pingo: "Pingo",
+    aguas_sumos: "Águas & Sumos",
+    agua_sem_gas: "Água sem gás",
+    agua_com_gas: "Água com gás",
+    agua_sabores: "Água sabores",
+    sumos_lata: "Sumos em lata",
+    sumos_nectar: "Sumos nectar",
+    sumos_sem_gas: "Sumos sem gás",
+    sumo_natural: "Sumo natural",
+    plemo: "Plemo",
+    ginger_ale: "Ginger Ale",
+    tonica: "Tónica",
+    doces: "Doces",
+    bolo_limao: "Bolo de Limão",
+    tarte_frutas: "Tarte de Frutas",
+    cachorro: "Cachorro",
+    cachorro_especial: "Cachorro especial",
+    tremocos: "Tremoços",
+    amendoins: "Amendoins",
+    chocolates: "Chocolates",
+    gomas: "Gomas",
+    batata_pacote: "Batata de pacote",
+    chourico_assado: "Chouriço assado com pão saloio",
+    fino: "Fino",
+    caneca: "Caneca",
+    tango: "Tango",
+    favalos_cerveja: "Favalos com cerveja",
+    mini: "Mini",
+    cerveja_33: "0,33cl branca/preta",
+    bohemia: "Bohemia",
+    heineken: "Heineken",
+    desperados: "Desperados",
+    bandida_pomar: "Bandida do Pomar",
+    black_label: "Black Label",
+    jb_15: "J&B 15 anos",
+    jack_daniels: "Jack Daniel's",
+    jameson: "Jameson",
+    red_bull: "Red Bull",
+    monster: "Monster",
+    le_coq: "Le Coq",
+    smirnoff_ice: "Smirnoff Ice",
+    safari: "Safari",
+    malibu: "Malibu",
+    beirao: "Beirão",
+    amendoa_amarga: "Amêndoa amarga",
+    porto_velho: "Porto Velho",
+    porto_novo: "Porto Novo",
+    martini_rosso: "Martini Rosso",
+    martini_branco: "Martini Branco",
+    vodka: "Vodka",
+    vodka_preta: "Vodka preta",
+    bacardi: "Bacardi",
+    gordons: "Gordons",
+    tanqueray: "Tanqueray",
+    bulldog: "Bulldog",
+    capirinha: "Capirinha",
+    caipiroska: "Caipiroska",
+    mojito: "Mojito",
+    cuba_libre: "Cuba-libre",
+    pina_colada: "Pina Colada",
+    martini_expresso: "Martini Expresso",
+    daquiri_morango: "Daquiri de Morango",
+    shot: "Shot",
+    sangria_branca: "Branca",
+    sangria_tinta: "Tinta",
+    crepe_simples: "Crepe simples com açúcar e canela",
+    crepe_topping: "Crepe de chocolate, morango ou caramelo com topping",
+    crepe_topping_chantilly: "Crepe de chocolate, morango ou caramelo com topping e chantilly",
+    gofre_chantilly: "Gofre com chantilly",
+    gofre_topping: "Gofre chocolate, morango ou caramelo",
+    gofre_topping_chantilly: "Gofre de chocolate, morango ou caramelo com chantilly",
+    sande_americana: "Sande americana",
+    sande_atum: "Sande de atum",
+    sande_delicias_mar: "Sande de delícias do mar",
+    sande_presunto: "Sande de presunto",
+    sande_queijo_presunto: "Sande de queijo e presunto",
+    hamburguer_classico: "Hambúrguer Clássico",
+    hamburguer_crunch: "Hambúrguer Crunch",
+    tosta_queijo: "Tosta de queijo",
+    tosta_queijo_fiambre: "Tosta de queijo com fiambre",
+    tosta_mista_pao_saloio: "Tosta mista em pão saloio",
+    torrada_pao_saloio: "Torrada de pão saloio",
+    meia_torrada_pao_saloio: "½ Torrada de pão saloio",
+    pao_alho: "Pão de alho",
+    pao_alho_especial: "Pão de alho especial",
+    pao_alho_queijo: "Pão de alho com queijo",
+    pao_davo_manteiga: "Pão davó com manteiga",
+    pao_davo_fiambre: "Pão davó com fiambre",
+    pao_davo_queijo: "Pão davó com queijo",
+    pao_davo_queijo_fiambre: "Pão davó com queijo e fiambre",
+    sagadinhos: "Sagadinhos",
+    bolos_diversos: "Bolos diversos",
+    pankeke: "Pankeke",
+    croissants: "Croissants",
+    croissant_manteiga: "Croissant com manteiga",
+    croissant_queijo: "Croissant com queijo",
+    croissant_misto: "Croissant misto",
+    // ...adicione as restantes chaves conforme o padrão acima...
+  },
+  en: {
+    title: "Pina Bar - Menu",
+    main_title: "Pina Bar - Menu",
+    iva: "VAT included at legal rate",
+    copyright: "© 2025 Pina Bar. All rights reserved.",
+    cafeteria: "Coffee Bar",
+    cafe: "Espresso",
+    cafe_gelo: "Iced Espresso",
+    cha: "Tea",
+    meia_leite: "White Coffee",
+    galao: "Latte",
+    carioca: "Weak Coffee or Lemon Tea",
+    carioca_duplo: "Double Weak Coffee",
+    cappuccino: "Cappuccino",
+    chocolate_quente: "Hot Chocolate",
+    ucal: "UCAL (Chocolate Milk)",
+    pingo: "Macchiato",
+    aguas_sumos: "Water & Juices",
+    agua_sem_gas: "Still Water",
+    agua_com_gas: "Sparkling Water",
+    agua_sabores: "Flavored Water",
+    sumos_lata: "Canned Juices",
+    sumos_nectar: "Nectar Juices",
+    sumos_sem_gas: "Still Juices",
+    sumo_natural: "Fresh Juice",
+    plemo: "Plemo",
+    ginger_ale: "Ginger Ale",
+    tonica: "Tonic",
+    doces: "Sweets",
+    bolo_limao: "Lemon Cake",
+    tarte_frutas: "Fruit Tart",
+    cachorro: "Hot Dog",
+    cachorro_especial: "Special Hot Dog",
+    tremocos: "Lupin Beans",
+    amendoins: "Peanuts",
+    chocolates: "Chocolates",
+    gomas: "Gummy Candies",
+    batata_pacote: "Packaged Chips",
+    chourico_assado: "Grilled Chorizo with Rustic Bread",
+    fino: "Fino",
+    caneca: "Mug",
+    tango: "Tango",
+    favalos_cerveja: "Beer Favalos",
+    mini: "Mini",
+    cerveja_33: "0.33cl White/Black",
+    bohemia: "Bohemia (Não traduzido)",
+    heineken: "Heineken (Não traduzido)",
+    desperados: "Desperados (Não traduzido)",
+    bandida_pomar: "Bandida do Pomar (Não traduzido)",
+    black_label: "Black Label (Não traduzido)",
+    jb_15: "J&B 15 anos (Não traduzido)",
+    jack_daniels: "Jack Daniel's (Não traduzido)",
+    jameson: "Jameson (Não traduzido)",
+    red_bull: "Red Bull (Não traduzido)",
+    monster: "Monster (Não traduzido)",
+    le_coq: "Le Coq (Não traduzido)",
+    smirnoff_ice: "Smirnoff Ice (Não traduzido)",
+    safari: "Safari",
+    malibu: "Malibu",
+    beirao: "Beirão",
+    amendoa_amarga: "Amêndoa amarga",
+    porto_velho: "Porto Velho",
+    porto_novo: "Porto Novo",
+    martini_rosso: "Martini Rosso",
+    martini_branco: "Martini Branco",
+    vodka: "Vodka",
+    vodka_preta: "Vodka preta",
+    bacardi: "Bacardi",
+    gordons: "Gordons",
+    tanqueray: "Tanqueray",
+    bulldog: "Bulldog",
+    capirinha: "Capirinha",
+    caipiroska: "Caipiroska",
+    mojito: "Mojito",
+    cuba_libre: "Cuba-libre",
+    pina_colada: "Pina Colada",
+    martini_expresso: "Martini Expresso",
+    daquiri_morango: "Daquiri de Morango",
+    shot: "Shot",
+    sangria_branca: "White Sangria",
+    sangria_tinta: "Red Sangria",
+    crepe_simples: "Simple Crepe with Sugar and Cinnamon",
+    crepe_topping: "Crepe with Chocolate, Strawberry or Caramel Topping",
+    crepe_topping_chantilly: "Crepe with Chocolate, Strawberry or Caramel Topping and Whipped Cream",
+    gofre_chantilly: "Waffle with Whipped Cream",
+    gofre_topping: "Waffle with Chocolate, Strawberry or Caramel",
+    gofre_topping_chantilly: "Waffle with Chocolate, Strawberry or Caramel with Whipped Cream",
+    sande_americana: "American Sandwich",
+    sande_atum: "Tuna Sandwich",
+    sande_delicias_mar: "Seafood Delights Sandwich",
+    sande_presunto: "Ham Sandwich",
+    sande_queijo_presunto: "Cheese and Ham Sandwich",
+    hamburguer_classico: "Classic Hamburger",
+    hamburguer_crunch: "Crunch Hamburger",
+    tosta_queijo: "Cheese Toast",
+    tosta_queijo_fiambre: "Cheese and Ham Toast",
+    tosta_mista_pao_saloio: "Mixed Toast in Rustic Bread",
+    torrada_pao_saloio: "Rustic Bread Toast",
+    meia_torrada_pao_saloio: "½ Rustic Bread Toast",
+    pao_alho: "Garlic Bread",
+    pao_alho_especial: "Special Garlic Bread",
+    pao_alho_queijo: "Garlic Bread with Cheese",
+    pao_davo_manteiga: "Rustic Bread with Butter",
+    pao_davo_fiambre: "Rustic Bread with Ham",
+    pao_davo_queijo: "Rustic Bread with Cheese",
+    pao_davo_queijo_fiambre: "Rustic Bread with Cheese and Ham",
+    sagadinhos: "Sagadinhos",
+    bolos_diversos: "Various Cakes",
+    pankeke: "Pankeke",
+    croissants: "Croissants",
+    croissant_manteiga: "Butter Croissant",
+    croissant_queijo: "Cheese Croissant",
+    croissant_misto: "Mixed Croissant",
+    // ...adicione as restantes chaves conforme o padrão acima...
+  },
+  es: {
+    title: "Pina Bar - Menú",
+    main_title: "Pina Bar - Menú",
+    iva: "IVA incluido a la taxa legal",
+    copyright: "© 2025 Pina Bar. Todos os direitos reservados.",
+    cafeteria: "Cafetería",
+    cafe: "Café",
+    cafe_gelo: "Café con hielo",
+    cha: "Té",
+    meia_leite: "Café con leche",
+    galao: "Galão",
+    carioca: "Café flojo o té de limón",
+    carioca_duplo: "Café flojo doble",
+    cappuccino: "Capuchino",
+    chocolate_quente: "Chocolate caliente",
+    ucal: "UCAL (leche con chocolate)",
+    pingo: "Café cortado",
+    aguas_sumos: "Aguas y Zumos",
+    agua_sem_gas: "Agua sin gas",
+    agua_com_gas: "Agua con gas",
+    agua_sabores: "Agua con sabores",
+    sumos_lata: "Zumos en lata",
+    sumos_nectar: "Zumos néctar",
+    sumos_sem_gas: "Zumos sin gas",
+    sumo_natural: "Zumo natural",
+    plemo: "Plemo",
+    ginger_ale: "Ginger Ale",
+    tonica: "Tónica",
+    doces: "Dulces",
+    bolo_limao: "Bizcocho de Limón",
+    tarte_frutas: "Tarta de Frutas",
+    cachorro: "Perro Caliente",
+    cachorro_especial: "Perro Caliente Especial",
+    tremocos: "Tremocos",
+    amendoins: "Cacahuetes",
+    chocolates: "Chocolates",
+    gomas: "Gomitas",
+    batata_pacote: "Patatas de paquete",
+    chourico_assado: "Chorizo asado con pan saloio",
+    fino: "Fino",
+    caneca: "Jarra",
+    tango: "Tango",
+    favalos_cerveja: "Favalos con cerveza",
+    mini: "Mini",
+    cerveja_33: "0,33cl blanca/negra",
+    bohemia: "Bohemia (Não traduzido)",
+    heineken: "Heineken (Não traduzido)",
+    desperados: "Desperados (Não traduzido)",
+    bandida_pomar: "Bandida do Pomar (Não traduzido)",
+    black_label: "Black Label (Não traduzido)",
+    jb_15: "J&B 15 anos (Não traduzido)",
+    jack_daniels: "Jack Daniel's (Não traduzido)",
+    jameson: "Jameson (Não traduzido)",
+    red_bull: "Red Bull (Não traduzido)",
+    monster: "Monster (Não traduzido)",
+    le_coq: "Le Coq (Não traduzido)",
+    smirnoff_ice: "Smirnoff Ice (Não traduzido)",
+    safari: "Safari",
+    malibu: "Malibu",
+    beirao: "Beirão",
+    amendoa_amarga: "Amêndoa amarga",
+    porto_velho: "Porto Velho",
+    porto_novo: "Porto Novo",
+    martini_rosso: "Martini Rosso",
+    martini_branco: "Martini Branco",
+    vodka: "Vodka",
+    vodka_preta: "Vodka preta",
+    bacardi: "Bacardi",
+    gordons: "Gordons",
+    tanqueray: "Tanqueray",
+    bulldog: "Bulldog",
+    capirinha: "Capirinha",
+    caipiroska: "Caipiroska",
+    mojito: "Mojito",
+    cuba_libre: "Cuba-libre",
+    pina_colada: "Pina Colada",
+    martini_expresso: "Martini Expresso",
+    daquiri_morango: "Daquiri de Morango",
+    shot: "Shot",
+    sangria_branca: "Sangría Blanca",
+    sangria_tinta: "Sangría Tinta",
+    crepe_simples: "Crepe simple con azúcar y canela",
+    crepe_topping: "Crepe de chocolate, fresa o caramelo con topping",
+    crepe_topping_chantilly: "Crepe de chocolate, fresa o caramelo con topping y nata",
+    gofre_chantilly: "Gofre con nata",
+    gofre_topping: "Gofre de chocolate, fresa o caramelo",
+    gofre_topping_chantilly: "Gofre de chocolate, fresa o caramelo con nata",
+    sande_americana: "Sándwich americano",
+    sande_atum: "Sándwich de atún",
+    sande_delicias_mar: "Sándwich de delicias del mar",
+    sande_presunto: "Sándwich de jamón",
+    sande_queijo_presunto: "Sándwich de queso y jamón",
+    hamburguer_classico: "Hamburguesa Clásica",
+    hamburguer_crunch: "Hamburguesa Crunch",
+    tosta_queijo: "Tostada de queso",
+    tosta_queijo_fiambre: "Tostada de queso con jamón",
+    tosta_mista_pao_saloio: "Tostada mixta en pan saloio",
+    torrada_pao_saloio: "Tostada de pan saloio",
+    meia_torrada_pao_saloio: "½ Tostada de pan saloio",
+    pao_alho: "Pan de ajo",
+    pao_alho_especial: "Pan de ajo especial",
+    pao_alho_queijo: "Pan de ajo con queso",
+    pao_davo_manteiga: "Pan davó con mantequilla",
+    pao_davo_fiambre: "Pan davó con jamón",
+    pao_davo_queijo: "Pan davó con queso",
+    pao_davo_queijo_fiambre: "Pan davó con queso y jamón",
+    sagadinhos: "Sagadinhos",
+    bolos_diversos: "Bizcochos diversos",
+    pankeke: "Pankeke",
+    croissants: "Croissants",
+    croissant_manteiga: "Croissant con mantequilla",
+    croissant_queijo: "Croissant con queso",
+    croissant_misto: "Croissant mixto",
+    // ...adicione as restantes chaves conforme o padrão acima...
+  }
+};
+
+function setLang(lang) {
+    document.documentElement.lang = lang;
+    // Título da página
+    document.title = translations[lang].title;
+    // Header principal
+    document.getElementById('main-title').textContent = translations[lang].main_title;
+    // IVA e copyright
+    document.getElementById('iva-text').textContent = translations[lang].iva;
+    document.getElementById('copyright').textContent = translations[lang].copyright;
+    // Secções e itens
+    document.querySelectorAll('[data-key]').forEach(function(el) {
+        var key = el.getAttribute('data-key');
+        if (translations[lang][key]) {
+            el.textContent = translations[lang][key];
+        }
+    });
+}
+
+function chooseLang(lang) {
+    setLang(lang);
+    document.getElementById('lang-modal').style.display = 'none';
+}
+
+// Fecha o modal se já houver idioma guardado (opcional: pode guardar em localStorage se quiser lembrar)
+window.onload = function() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('lang-modal').style.display = 'flex';
+};
+
+// Pesquisa dinâmica
+function filterMenu() {
+    var input = document.getElementById('search-input').value.trim().toLowerCase();
+    // Para cada secção
+    document.querySelectorAll('.section').forEach(function(section) {
+        var hasVisible = false;
+        // Para cada item da secção
+        section.querySelectorAll('.item').forEach(function(item) {
+            var name = item.querySelector('.item-name').textContent.toLowerCase();
+            if (name.indexOf(input) !== -1) {
+                item.style.display = '';
+                hasVisible = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        // Mostra ou esconde o título da secção conforme existam itens visíveis
+        section.style.display = hasVisible ? '' : 'none';
+    });
+}
+</script>
 
 </body>
 </html>
