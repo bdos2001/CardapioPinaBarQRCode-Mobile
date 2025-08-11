@@ -18,11 +18,12 @@
             justify-content: center;
         }
         #lang-modal-content {
-            background: #fff;
-            border-radius: 12px;
-            padding: 32px 24px;
+            /* Remover fundo branco */
+            background: none;
+            border-radius: 0;
+            padding: 0;
             text-align: center;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+            box-shadow: none;
         }
         #lang-modal button {
             margin: 0 10px;
@@ -51,18 +52,42 @@
             border: 1px solid #ccc;
             font-size: 1em;
         }
+        /* Seletor de idioma fixo no topo */
+        #lang-top-bar {
+            text-align: center;
+            margin: 16px 0 0 0;
+        }
+        #lang-top-bar button {
+            margin: 0 4px;
+            font-size: 1em;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            background: #f5f5f5;
+            transition: background 0.2s;
+        }
+        #lang-top-bar button:hover {
+            background: #ffe082;
+        }
     </style>
 </head>
 <body class="static-bg">
 
-<!-- Modal de seleção de idioma -->
+<!-- Modal de seleção de idioma (apenas opções, sem fundo branco) -->
 <div id="lang-modal">
     <div id="lang-modal-content">
-        <div style="font-size:1.2em; margin-bottom:18px;">Escolha o idioma / Choose language / Elija el idioma</div>
         <button onclick="chooseLang('pt')">🇵🇹 Português</button>
         <button onclick="chooseLang('en')">🇬🇧 English</button>
         <button onclick="chooseLang('es')">🇪🇸 Español</button>
     </div>
+</div>
+
+<!-- Seletor de idioma no topo da página -->
+<div id="lang-top-bar">
+    <button type="button" onclick="chooseLang('pt')">🇵🇹 Português</button>
+    <button type="button" onclick="chooseLang('en')">🇬🇧 English</button>
+    <button type="button" onclick="chooseLang('es')">🇪🇸 Español</button>
 </div>
 
 <!-- Barra de pesquisa -->
@@ -74,6 +99,7 @@
     <h1 id="main-title">Pina Bar - Cardápio</h1>
 </header>
 
+<!-- Menu/artigos -->
 <div id="menu-content" class="section">
     <h2 data-key="cafeteria">Cafetaria</h2>
     <div class="item"><span class="item-name" data-key="cafe">Café</span><span class="item-price">0,90€</span></div>
@@ -88,7 +114,6 @@
     <div class="item"><span class="item-name" data-key="ucal">UCAL</span><span class="item-price">1,50€</span></div>
     <div class="item"><span class="item-name" data-key="pingo">Pingo</span><span class="item-price">1,20€</span></div>
 </div>
-
 <div class="section">
     <h2 data-key="aguas_sumos">Águas & Sumos</h2>
     <div class="item"><span class="item-name" data-key="agua_sem_gas">Água sem gás</span><span class="item-price">1,00€</span></div>
@@ -102,7 +127,6 @@
     <div class="item"><span class="item-name" data-key="ginger_ale">Ginger Ale</span><span class="item-price">1,40€</span></div>
     <div class="item"><span class="item-name" data-key="tonica">Tónica</span><span class="item-price">1,50€</span></div>
 </div>
-
 <div class="section">
     <h2 data-key="snacks_petiscos">Snacks & Petiscos</h2>
     <div class="item"><span class="item-name" data-key="cachorro">Cachorro</span><span class="item-price">3,50€</span></div>
@@ -114,7 +138,6 @@
     <div class="item"><span class="item-name" data-key="batata_pacote">Batata de pacote</span><span class="item-price">0,80€</span></div>
     <div class="item"><span class="item-name" data-key="chourico_assado">Chouriço assado com pão saloio</span><span class="item-price">3,00€</span></div>
 </div>
-
 <div class="section">
     <h2 data-key="cerveja">Cerveja</h2>
     <div class="item"><span class="item-name" data-key="fino">Fino</span><span class="item-price">1,40€</span></div>
@@ -128,7 +151,6 @@
     <div class="item"><span class="item-name" data-key="desperados">Desperados</span><span class="item-price">2,50€</span></div>
     <div class="item"><span class="item-name" data-key="bandida_pomar">Bandida do Pomar</span><span class="item-price">2,20€</span></div>
 </div>
-
 <div class="section">
     <h2 data-key="whiskey">Whiskey</h2>
     <div class="item"><span class="item-name" data-key="black_label">Black Label</span><span class="item-price">6,00€</span></div>
@@ -140,14 +162,12 @@
     <div class="item"><span class="item-name" data-key="jb_bravo">J&amp;B Bravo</span><span class="item-price">4,50€</span></div>
     <div class="item"><span class="item-name" data-key="william_lawson">William Lawson</span><span class="item-price">4,50€</span></div>
 </div>
-
 <div class="section">
     <h2 data-key="aguardentes">Aguardentes</h2>
     <div class="item"><span class="item-name" data-key="macieira">Macieira</span><span class="item-price">2,50€</span></div>
     <div class="item"><span class="item-name" data-key="croft">Croft</span><span class="item-price">2,50€</span></div>
     <div class="item"><span class="item-name" data-key="crf">CRF</span><span class="item-price">4,50€</span></div>
 </div>
-
 <div class="section">
     <h2 data-key="brandys_espirituosas">Brandys & Espirituosas</h2>
     <div class="item"><span class="item-name" data-key="safari">Safari</span><span class="item-price">4,50€</span></div>
@@ -177,13 +197,11 @@
     <div class="item"><span class="item-name" data-key="le_coq">Le Coq</span><span class="item-price">3,00€</span></div>
     <div class="item"><span class="item-name" data-key="smirnoff_ice">Smirnoff Ice</span><span class="item-price">3,00€</span></div>
 </div>
-
 <div class="section">
     <h2 data-key="sangrias">Sangrias</h2>
     <div class="item"><span class="item-name" data-key="sangria_branca">Branca</span><span class="item-price">9,00€</span></div>
     <div class="item"><span class="item-name" data-key="sangria_tinta">Tinta</span><span class="item-price">9,00€</span></div>
 </div>
-
 <div class="section">
     <h2 data-key="crepes_gofres">Crepes & Gofres</h2>
     <div class="item"><span class="item-name" data-key="crepe_simples">Crepe simples com açúcar e canela</span><span class="item-price">1,20€</span></div>
@@ -193,7 +211,6 @@
     <div class="item"><span class="item-name" data-key="gofre_topping">Gofre chocolate, morango ou caramelo</span><span class="item-price">1,50€</span></div>
     <div class="item"><span class="item-name" data-key="gofre_topping_chantilly">Gofre de chocolate, morango ou caramelo com chantilly</span><span class="item-price">1,80€</span></div>
 </div>
-
 <div class="section">
     <h2 data-key="sandes_tostas">Sandes & Tostas</h2>
     <div class="item"><span class="item-name" data-key="sande_americana">Sande americana</span><span class="item-price">4,00€</span></div>
@@ -207,7 +224,6 @@
     <div class="item"><span class="item-name" data-key="tosta_queijo_fiambre">Tosta de queijo com fiambre</span><span class="item-price">2,30€</span></div>
     <div class="item"><span class="item-name" data-key="tosta_mista_pao_saloio">Tosta mista em pão saloio</span><span class="item-price">2,80€</span></div>
 </div>
-
 <div class="section">
     <h2 data-key="pao_pastelaria">Pão & Pastelaria</h2>
     <div class="item"><span class="item-name" data-key="torrada_pao_saloio">Torrada de pão saloio</span><span class="item-price">1,50€</span></div>
@@ -254,364 +270,391 @@
 </footer>
 
 <script>
-const translations = {
-  pt: {
-    title: "Pina Bar - Cardápio",
-    main_title: "Pina Bar - Cardápio",
-    iva: "I.V.A. incluído à taxa legal",
-    copyright: "© 2025 Pina Bar. Todos os direitos reservados.",
-    cafeteria: "Cafetaria",
-    cafe: "Café",
-    cafe_gelo: "Café com gelo",
-    cha: "Chá",
-    meia_leite: "Meia de leite",
-    galao: "Galão",
-    carioca: "Carioca de café ou limão",
-    carioca_duplo: "Carioca duplo",
-    cappuccino: "Cappuccino",
-    chocolate_quente: "Chocolate quente",
-    ucal: "UCAL",
-    pingo: "Pingo",
-    aguas_sumos: "Águas & Sumos",
-    agua_sem_gas: "Água sem gás",
-    agua_com_gas: "Água com gás",
-    agua_sabores: "Água sabores",
-    sumos_lata: "Sumos em lata",
-    sumos_nectar: "Sumos nectar",
-    sumos_sem_gas: "Sumos sem gás",
-    sumo_natural: "Sumo natural",
-    plemo: "Plemo",
-    ginger_ale: "Ginger Ale",
-    tonica: "Tónica",
-    doces: "Doces",
-    bolo_limao: "Bolo de Limão",
-    tarte_frutas: "Tarte de Frutas",
-    cachorro: "Cachorro",
-    cachorro_especial: "Cachorro especial",
-    tremocos: "Tremoços",
-    amendoins: "Amendoins",
-    chocolates: "Chocolates",
-    gomas: "Gomas",
-    batata_pacote: "Batata de pacote",
-    chourico_assado: "Chouriço assado com pão saloio",
-    fino: "Fino",
-    caneca: "Caneca",
-    tango: "Tango",
-    favalos_cerveja: "Favalos com cerveja",
-    mini: "Mini",
-    cerveja_33: "0,33cl branca/preta",
-    bohemia: "Bohemia",
-    heineken: "Heineken",
-    desperados: "Desperados",
-    bandida_pomar: "Bandida do Pomar",
-    black_label: "Black Label",
-    jb_15: "J&B 15 anos",
-    jack_daniels: "Jack Daniel's",
-    jameson: "Jameson",
-    red_bull: "Red Bull",
-    monster: "Monster",
-    le_coq: "Le Coq",
-    smirnoff_ice: "Smirnoff Ice",
-    safari: "Safari",
-    malibu: "Malibu",
-    beirao: "Beirão",
-    amendoa_amarga: "Amêndoa amarga",
-    porto_velho: "Porto Velho",
-    porto_novo: "Porto Novo",
-    martini_rosso: "Martini Rosso",
-    martini_branco: "Martini Branco",
-    vodka: "Vodka",
-    vodka_preta: "Vodka preta",
-    bacardi: "Bacardi",
-    gordons: "Gordons",
-    tanqueray: "Tanqueray",
-    bulldog: "Bulldog",
-    capirinha: "Capirinha",
-    caipiroska: "Caipiroska",
-    mojito: "Mojito",
-    cuba_libre: "Cuba-libre",
-    pina_colada: "Pina Colada",
-    martini_expresso: "Martini Expresso",
-    daquiri_morango: "Daquiri de Morango",
-    shot: "Shot",
-    sangria_branca: "Branca",
-    sangria_tinta: "Tinta",
-    crepe_simples: "Crepe simples com açúcar e canela",
-    crepe_topping: "Crepe de chocolate, morango ou caramelo com topping",
-    crepe_topping_chantilly: "Crepe de chocolate, morango ou caramelo com topping e chantilly",
-    gofre_chantilly: "Gofre com chantilly",
-    gofre_topping: "Gofre chocolate, morango ou caramelo",
-    gofre_topping_chantilly: "Gofre de chocolate, morango ou caramelo com chantilly",
-    sande_americana: "Sande americana",
-    sande_atum: "Sande de atum",
-    sande_delicias_mar: "Sande de delícias do mar",
-    sande_presunto: "Sande de presunto",
-    sande_queijo_presunto: "Sande de queijo e presunto",
-    hamburguer_classico: "Hambúrguer Clássico",
-    hamburguer_crunch: "Hambúrguer Crunch",
-    tosta_queijo: "Tosta de queijo",
-    tosta_queijo_fiambre: "Tosta de queijo com fiambre",
-    tosta_mista_pao_saloio: "Tosta mista em pão saloio",
-    torrada_pao_saloio: "Torrada de pão saloio",
-    meia_torrada_pao_saloio: "½ Torrada de pão saloio",
-    pao_alho: "Pão de alho",
-    pao_alho_especial: "Pão de alho especial",
-    pao_alho_queijo: "Pão de alho com queijo",
-    pao_davo_manteiga: "Pão davó com manteiga",
-    pao_davo_fiambre: "Pão davó com fiambre",
-    pao_davo_queijo: "Pão davó com queijo",
-    pao_davo_queijo_fiambre: "Pão davó com queijo e fiambre",
-    sagadinhos: "Sagadinhos",
-    bolos_diversos: "Bolos diversos",
-    pankeke: "Pankeke",
-    croissants: "Croissants",
-    croissant_manteiga: "Croissant com manteiga",
-    croissant_queijo: "Croissant com queijo",
-    croissant_misto: "Croissant misto",
-    // ...adicione as restantes chaves conforme o padrão acima...
-  },
-  en: {
-    title: "Pina Bar - Menu",
-    main_title: "Pina Bar - Menu",
-    iva: "VAT included at legal rate",
-    copyright: "© 2025 Pina Bar. All rights reserved.",
-    cafeteria: "Coffee Bar",
-    cafe: "Espresso",
-    cafe_gelo: "Iced Espresso",
-    cha: "Tea",
-    meia_leite: "White Coffee",
-    galao: "Latte",
-    carioca: "Weak Coffee or Lemon Tea",
-    carioca_duplo: "Double Weak Coffee",
-    cappuccino: "Cappuccino",
-    chocolate_quente: "Hot Chocolate",
-    ucal: "UCAL (Chocolate Milk)",
-    pingo: "Macchiato",
-    aguas_sumos: "Water & Juices",
-    agua_sem_gas: "Still Water",
-    agua_com_gas: "Sparkling Water",
-    agua_sabores: "Flavored Water",
-    sumos_lata: "Canned Juices",
-    sumos_nectar: "Nectar Juices",
-    sumos_sem_gas: "Still Juices",
-    sumo_natural: "Fresh Juice",
-    plemo: "Plemo",
-    ginger_ale: "Ginger Ale",
-    tonica: "Tonic",
-    doces: "Sweets",
-    bolo_limao: "Lemon Cake",
-    tarte_frutas: "Fruit Tart",
-    cachorro: "Hot Dog",
-    cachorro_especial: "Special Hot Dog",
-    tremocos: "Lupin Beans",
-    amendoins: "Peanuts",
-    chocolates: "Chocolates",
-    gomas: "Gummy Candies",
-    batata_pacote: "Packaged Chips",
-    chourico_assado: "Grilled Chorizo with Rustic Bread",
-    fino: "Fino",
-    caneca: "Mug",
-    tango: "Tango",
-    favalos_cerveja: "Beer Favalos",
-    mini: "Mini",
-    cerveja_33: "0.33cl White/Black",
-    bohemia: "Bohemia (Não traduzido)",
-    heineken: "Heineken (Não traduzido)",
-    desperados: "Desperados (Não traduzido)",
-    bandida_pomar: "Bandida do Pomar (Não traduzido)",
-    black_label: "Black Label (Não traduzido)",
-    jb_15: "J&B 15 anos (Não traduzido)",
-    jack_daniels: "Jack Daniel's (Não traduzido)",
-    jameson: "Jameson (Não traduzido)",
-    red_bull: "Red Bull (Não traduzido)",
-    monster: "Monster (Não traduzido)",
-    le_coq: "Le Coq (Não traduzido)",
-    smirnoff_ice: "Smirnoff Ice (Não traduzido)",
-    safari: "Safari",
-    malibu: "Malibu",
-    beirao: "Beirão",
-    amendoa_amarga: "Amêndoa amarga",
-    porto_velho: "Porto Velho",
-    porto_novo: "Porto Novo",
-    martini_rosso: "Martini Rosso",
-    martini_branco: "Martini Branco",
-    vodka: "Vodka",
-    vodka_preta: "Vodka preta",
-    bacardi: "Bacardi",
-    gordons: "Gordons",
-    tanqueray: "Tanqueray",
-    bulldog: "Bulldog",
-    capirinha: "Capirinha",
-    caipiroska: "Caipiroska",
-    mojito: "Mojito",
-    cuba_libre: "Cuba-libre",
-    pina_colada: "Pina Colada",
-    martini_expresso: "Martini Expresso",
-    daquiri_morango: "Daquiri de Morango",
-    shot: "Shot",
-    sangria_branca: "White Sangria",
-    sangria_tinta: "Red Sangria",
-    crepe_simples: "Simple Crepe with Sugar and Cinnamon",
-    crepe_topping: "Crepe with Chocolate, Strawberry or Caramel Topping",
-    crepe_topping_chantilly: "Crepe with Chocolate, Strawberry or Caramel Topping and Whipped Cream",
-    gofre_chantilly: "Waffle with Whipped Cream",
-    gofre_topping: "Waffle with Chocolate, Strawberry or Caramel",
-    gofre_topping_chantilly: "Waffle with Chocolate, Strawberry or Caramel with Whipped Cream",
-    sande_americana: "American Sandwich",
-    sande_atum: "Tuna Sandwich",
-    sande_delicias_mar: "Seafood Delights Sandwich",
-    sande_presunto: "Ham Sandwich",
-    sande_queijo_presunto: "Cheese and Ham Sandwich",
-    hamburguer_classico: "Classic Hamburger",
-    hamburguer_crunch: "Crunch Hamburger",
-    tosta_queijo: "Cheese Toast",
-    tosta_queijo_fiambre: "Cheese and Ham Toast",
-    tosta_mista_pao_saloio: "Mixed Toast in Rustic Bread",
-    torrada_pao_saloio: "Rustic Bread Toast",
-    meia_torrada_pao_saloio: "½ Rustic Bread Toast",
-    pao_alho: "Garlic Bread",
-    pao_alho_especial: "Special Garlic Bread",
-    pao_alho_queijo: "Garlic Bread with Cheese",
-    pao_davo_manteiga: "Rustic Bread with Butter",
-    pao_davo_fiambre: "Rustic Bread with Ham",
-    pao_davo_queijo: "Rustic Bread with Cheese",
-    pao_davo_queijo_fiambre: "Rustic Bread with Cheese and Ham",
-    sagadinhos: "Sagadinhos",
-    bolos_diversos: "Various Cakes",
-    pankeke: "Pankeke",
-    croissants: "Croissants",
-    croissant_manteiga: "Butter Croissant",
-    croissant_queijo: "Cheese Croissant",
-    croissant_misto: "Mixed Croissant",
-    // ...adicione as restantes chaves conforme o padrão acima...
-  },
-  es: {
-    title: "Pina Bar - Menú",
-    main_title: "Pina Bar - Menú",
-    iva: "IVA incluido a la taxa legal",
-    copyright: "© 2025 Pina Bar. Todos os direitos reservados.",
-    cafeteria: "Cafetería",
-    cafe: "Café",
-    cafe_gelo: "Café con hielo",
-    cha: "Té",
-    meia_leite: "Café con leche",
-    galao: "Galão",
-    carioca: "Café flojo o té de limón",
-    carioca_duplo: "Café flojo doble",
-    cappuccino: "Capuchino",
-    chocolate_quente: "Chocolate caliente",
-    ucal: "UCAL (leche con chocolate)",
-    pingo: "Café cortado",
-    aguas_sumos: "Aguas y Zumos",
-    agua_sem_gas: "Agua sin gas",
-    agua_com_gas: "Agua con gas",
-    agua_sabores: "Agua con sabores",
-    sumos_lata: "Zumos en lata",
-    sumos_nectar: "Zumos néctar",
-    sumos_sem_gas: "Zumos sin gas",
-    sumo_natural: "Zumo natural",
-    plemo: "Plemo",
-    ginger_ale: "Ginger Ale",
-    tonica: "Tónica",
-    doces: "Dulces",
-    bolo_limao: "Bizcocho de Limón",
-    tarte_frutas: "Tarta de Frutas",
-    cachorro: "Perro Caliente",
-    cachorro_especial: "Perro Caliente Especial",
-    tremocos: "Tremocos",
-    amendoins: "Cacahuetes",
-    chocolates: "Chocolates",
-    gomas: "Gomitas",
-    batata_pacote: "Patatas de paquete",
-    chourico_assado: "Chorizo asado con pan saloio",
-    fino: "Fino",
-    caneca: "Jarra",
-    tango: "Tango",
-    favalos_cerveja: "Favalos con cerveza",
-    mini: "Mini",
-    cerveja_33: "0,33cl blanca/negra",
-    bohemia: "Bohemia (Não traduzido)",
-    heineken: "Heineken (Não traduzido)",
-    desperados: "Desperados (Não traduzido)",
-    bandida_pomar: "Bandida do Pomar (Não traduzido)",
-    black_label: "Black Label (Não traduzido)",
-    jb_15: "J&B 15 anos (Não traduzido)",
-    jack_daniels: "Jack Daniel's (Não traduzido)",
-    jameson: "Jameson (Não traduzido)",
-    red_bull: "Red Bull (Não traduzido)",
-    monster: "Monster (Não traduzido)",
-    le_coq: "Le Coq (Não traduzido)",
-    smirnoff_ice: "Smirnoff Ice (Não traduzido)",
-    safari: "Safari",
-    malibu: "Malibu",
-    beirao: "Beirão",
-    amendoa_amarga: "Amêndoa amarga",
-    porto_velho: "Porto Velho",
-    porto_novo: "Porto Novo",
-    martini_rosso: "Martini Rosso",
-    martini_branco: "Martini Branco",
-    vodka: "Vodka",
-    vodka_preta: "Vodka preta",
-    bacardi: "Bacardi",
-    gordons: "Gordons",
-    tanqueray: "Tanqueray",
-    bulldog: "Bulldog",
-    capirinha: "Capirinha",
-    caipiroska: "Caipiroska",
-    mojito: "Mojito",
-    cuba_libre: "Cuba-libre",
-    pina_colada: "Pina Colada",
-    martini_expresso: "Martini Expresso",
-    daquiri_morango: "Daquiri de Morango",
-    shot: "Shot",
-    sangria_branca: "Sangría Blanca",
-    sangria_tinta: "Sangría Tinta",
-    crepe_simples: "Crepe simple con azúcar y canela",
-    crepe_topping: "Crepe de chocolate, fresa o caramelo con topping",
-    crepe_topping_chantilly: "Crepe de chocolate, fresa o caramelo con topping y nata",
-    gofre_chantilly: "Gofre con nata",
-    gofre_topping: "Gofre de chocolate, fresa o caramelo",
-    gofre_topping_chantilly: "Gofre de chocolate, fresa o caramelo con nata",
-    sande_americana: "Sándwich americano",
-    sande_atum: "Sándwich de atún",
-    sande_delicias_mar: "Sándwich de delicias del mar",
-    sande_presunto: "Sándwich de jamón",
-    sande_queijo_presunto: "Sándwich de queso y jamón",
-    hamburguer_classico: "Hamburguesa Clásica",
-    hamburguer_crunch: "Hamburguesa Crunch",
-    tosta_queijo: "Tostada de queso",
-    tosta_queijo_fiambre: "Tostada de queso con jamón",
-    tosta_mista_pao_saloio: "Tostada mixta en pan saloio",
-    torrada_pao_saloio: "Tostada de pan saloio",
-    meia_torrada_pao_saloio: "½ Tostada de pan saloio",
-    pao_alho: "Pan de ajo",
-    pao_alho_especial: "Pan de ajo especial",
-    pao_alho_queijo: "Pan de ajo con queso",
-    pao_davo_manteiga: "Pan davó con mantequilla",
-    pao_davo_fiambre: "Pan davó con jamón",
-    pao_davo_queijo: "Pan davó con queso",
-    pao_davo_queijo_fiambre: "Pan davó con queso y jamón",
-    sagadinhos: "Sagadinhos",
-    bolos_diversos: "Bizcochos diversos",
-    pankeke: "Pankeke",
-    croissants: "Croissants",
-    croissant_manteiga: "Croissant con mantequilla",
-    croissant_queijo: "Croissant con queso",
-    croissant_misto: "Croissant mixto",
-    // ...adicione as restantes chaves conforme o padrão acima...
-  }
+// Objecto de traduções
+var translations = {
+    pt: {
+        title: "Pina Bar - Cardápio",
+        main_title: "Pina Bar - Cardápio",
+        iva: "I.V.A. incluído à taxa legal",
+        copyright: "© 2025 Pina Bar. Todos os direitos reservados.",
+        cafeteria: "Cafetaria",
+        aguas_sumos: "Águas & Sumos",
+        snacks_petiscos: "Snacks & Petiscos",
+        cerveja: "Cerveja",
+        whiskey: "Whiskey",
+        aguardentes: "Aguardentes",
+        brandys_espirituosas: "Brandys & Espirituosas",
+        sangrias: "Sangrias",
+        crepes_gofres: "Crepes & Gofres",
+        sandes_tostas: "Sandes & Tostas",
+        pao_pastelaria: "Pão & Pastelaria",
+        cafe: "Café",
+        "cafe_gelo": "Café com gelo",
+        cha: "Chá",
+        meia_leite: "Meia de leite",
+        galao: "Galão",
+        carioca: "Carioca de café ou limão",
+        carioca_duplo: "Carioca duplo",
+        cappuccino: "Cappuccino",
+        "chocolate_quente": "Chocolate quente",
+        ucal: "UCAL",
+        pingo: "Pingo",
+        agua_sem_gas: "Água sem gás",
+        agua_com_gas: "Água com gás",
+        agua_sabores: "Água sabores",
+        sumos_lata: "Sumos em lata",
+        sumos_nectar: "Sumos nectar",
+        sumos_sem_gas: "Sumos sem gás",
+        sumo_natural: "Sumo natural",
+        plemo: "Plemo",
+        ginger_ale: "Ginger Ale",
+        tonica: "Tónica",
+        cachorro: "Cachorro",
+        cachorro_especial: "Cachorro especial",
+        tremocos: "Tremoços",
+        amendoins: "Amendoins",
+        chocolates: "Chocolates",
+        gomas: "Gomas",
+        batata_pacote: "Batata de pacote",
+        chourico_assado: "Chouriço assado com pão saloio",
+        fino: "Fino",
+        caneca: "Caneca",
+        tango: "Tango",
+        favalos_cerveja: "Favalos com cerveja",
+        mini: "Mini",
+        cerveja_33: "0,33cl branca/preta",
+        bohemia: "Bohemia",
+        heineken: "Heineken",
+        desperados: "Desperados",
+        bandida_pomar: "Bandida do Pomar",
+        black_label: "Black Label",
+        jb_15: "J&amp;B 15 anos",
+        jack_daniels: "Jack Daniel's",
+        jameson: "Jameson",
+        red_label: "Red Label",
+        cutty_sark: "Cutty Sark",
+        jb_bravo: "J&amp;B Bravo",
+        william_lawson: "William Lawson",
+        macieira: "Macieira",
+        croft: "Croft",
+        crf: "CRF",
+        safari: "Safari",
+        malibu: "Malibu",
+        beirao: "Beirão",
+        amendoa_amarga: "Amêndoa amarga",
+        porto_velho: "Porto Velho",
+        porto_novo: "Porto Novo",
+        martini_rosso: "Martini Rosso",
+        martini_branco: "Martini Branco",
+        vodka: "Vodka",
+        vodka_preta: "Vodka preta",
+        bacardi: "Bacardi",
+        gordons: "Gordons",
+        tanqueray: "Tanqueray",
+        bulldog: "Bulldog",
+        capirinha: "Capirinha",
+        caipiroska: "Caipiroska",
+        mojito: "Mojito",
+        cuba_libre: "Cuba-libre",
+        pina_colada: "Pina Colada",
+        martini_expresso: "Martini Expresso",
+        daquiri_morango: "Daquiri de Morango",
+        shot: "Shot",
+        red_bull: "Red Bull",
+        monster: "Monster",
+        le_coq: "Le Coq",
+        smirnoff_ice: "Smirnoff Ice",
+        crepe_simples: "Crepe simples com açúcar e canela",
+        crepe_topping: "Crepe de chocolate, morango ou caramelo com topping",
+        crepe_topping_chantilly: "Crepe de chocolate, morango ou caramelo com topping e chantilly",
+        gofre_chantilly: "Gofre com chantilly",
+        gofre_topping: "Gofre chocolate, morango ou caramelo",
+        gofre_topping_chantilly: "Gofre de chocolate, morango ou caramelo com chantilly",
+        sande_americana: "Sande americana",
+        sande_atum: "Sande de atum",
+        sande_delicias_mar: "Sande de delícias do mar",
+        sande_presunto: "Sande de presunto",
+        sande_queijo_presunto: "Sande de queijo e presunto",
+        hamburguer_classico: "Hambúrguer Clássico",
+        hamburguer_crunch: "Hambúrguer Crunch",
+        tosta_queijo: "Tosta de queijo",
+        tosta_queijo_fiambre: "Tosta de queijo com fiambre",
+        tosta_mista_pao_saloio: "Tosta mista em pão saloio",
+        torrada_pao_saloio: "Torrada de pão saloio",
+        meia_torrada_pao_saloio: "½ Torrada de pão saloio",
+        pao_alho: "Pão de alho",
+        pao_alho_especial: "Pão de alho especial",
+        pao_alho_queijo: "Pão de alho com queijo",
+        pao_davo_manteiga: "Pão davó com manteiga",
+        pao_davo_fiambre: "Pão davó com fiambre",
+        pao_davo_queijo: "Pão davó com queijo",
+        pao_davo_queijo_fiambre: "Pão davó com queijo e fiambre",
+        sagadinhos: "Sagadinhos",
+        bolos_diversos: "Bolos diversos",
+        pankeke: "Pankeke",
+        croissants: "Croissants",
+        croissant_manteiga: "Croissant com manteiga",
+        croissant_queijo: "Croissant com queijo",
+        croissant_misto: "Croissant misto"
+    },
+    en: {
+        title: "Pina Bar - Menu",
+        main_title: "Pina Bar - Menu",
+        iva: "VAT included at the legal rate",
+        copyright: "© 2025 Pina Bar. All rights reserved.",
+        cafeteria: "Cafeteria",
+        aguas_sumos: "Waters & Juices",
+        snacks_petiscos: "Snacks & Appetizers",
+        cerveja: "Beer",
+        whiskey: "Whiskey",
+        aguardentes: "Aguardentes",
+        brandys_espirituosas: "Brandies & Spirits",
+        sangrias: "Sangrias",
+        crepes_gofres: "Crepes & Waffles",
+        sandes_tostas: "Sandwiches & Toasts",
+        pao_pastelaria: "Bread & Pastry",
+        cafe: "Coffee",
+        "cafe_gelo": "Iced Coffee",
+        cha: "Tea",
+        meia_leite: "Half Milk",
+        galao: "Galão",
+        carioca: "Carioca with coffee or lemon",
+        carioca_duplo: "Double Carioca",
+        cappuccino: "Cappuccino",
+        "chocolate_quente": "Hot Chocolate",
+        ucal: "UCAL",
+        pingo: "Pingo",
+        agua_sem_gas: "Still Water",
+        agua_com_gas: "Sparkling Water",
+        agua_sabores: "Flavored Water",
+        sumos_lata: "Canned Juices",
+        sumos_nectar: "Nectar Juices",
+        sumos_sem_gas: "Juices without gas",
+        sumo_natural: "Natural Juice",
+        plemo: "Plemo",
+        ginger_ale: "Ginger Ale",
+        tonica: "Tonic",
+        cachorro: "Hot Dog",
+        cachorro_especial: "Special Hot Dog",
+        tremocos: "Tremoços",
+        amendoins: "Peanuts",
+        chocolates: "Chocolates",
+        gomas: "Gummy Candies",
+        batata_pacote: "Packaged Chips",
+        chourico_assado: "Grilled Chorizo with bread",
+        fino: "Fino",
+        caneca: "Mug",
+        tango: "Tango",
+        favalos_cerveja: "Favalos with beer",
+        mini: "Mini",
+        cerveja_33: "0.33cl White/Black",
+        bohemia: "Bohemia",
+        heineken: "Heineken",
+        desperados: "Desperados",
+        bandida_pomar: "Bandida do Pomar",
+        black_label: "Black Label",
+        jb_15: "J&amp;B 15 years",
+        jack_daniels: "Jack Daniel's",
+        jameson: "Jameson",
+        red_label: "Red Label",
+        cutty_sark: "Cutty Sark",
+        jb_bravo: "J&amp;B Bravo",
+        william_lawson: "William Lawson",
+        macieira: "Macieira",
+        croft: "Croft",
+        crf: "CRF",
+        safari: "Safari",
+        malibu: "Malibu",
+        beirao: "Beirão",
+        amendoa_amarga: "Bitter Almond",
+        porto_velho: "Old Port",
+        porto_novo: "New Port",
+        martini_rosso: "Martini Rosso",
+        martini_branco: "Martini Branco",
+        vodka: "Vodka",
+        vodka_preta: "Black Vodka",
+        bacardi: "Bacardi",
+        gordons: "Gordons",
+        tanqueray: "Tanqueray",
+        bulldog: "Bulldog",
+        capirinha: "Caipirinha",
+        caipiroska: "Caipiroska",
+        mojito: "Mojito",
+        cuba_libre: "Cuba-libre",
+        pina_colada: "Pina Colada",
+        martini_expresso: "Espresso Martini",
+        daquiri_morango: "Strawberry Daquiri",
+        shot: "Shot",
+        red_bull: "Red Bull",
+        monster: "Monster",
+        le_coq: "Le Coq",
+        smirnoff_ice: "Smirnoff Ice",
+        crepe_simples: "Simple crepe with sugar and cinnamon",
+        crepe_topping: "Crepe with chocolate, strawberry or caramel topping",
+        crepe_topping_chantilly: "Crepe with chocolate, strawberry or caramel topping and whipped cream",
+        gofre_chantilly: "Waffle with whipped cream",
+        gofre_topping: "Waffle chocolate, strawberry or caramel",
+        gofre_topping_chantilly: "Waffle with chocolate, strawberry or caramel with whipped cream",
+        sande_americana: "American Sandwich",
+        sande_atum: "Tuna Sandwich",
+        sande_delicias_mar: "Seafood Delights Sandwich",
+        sande_presunto: "Ham Sandwich",
+        sande_queijo_presunto: "Cheese and Ham Sandwich",
+        hamburguer_classico: "Classic Hamburger",
+        hamburguer_crunch: "Crunch Hamburger",
+        tosta_queijo: "Cheese Toast",
+        tosta_queijo_fiambre: "Cheese and Ham Toast",
+        tosta_mista_pao_saloio: "Mixed Toast in Saloio Bread",
+        torrada_pao_saloio: "Saloio Bread Toast",
+        meia_torrada_pao_saloio: "½ Saloio Bread Toast",
+        pao_alho: "Garlic Bread",
+        pao_alho_especial: "Special Garlic Bread",
+        pao_alho_queijo: "Garlic Bread with Cheese",
+        pao_davo_manteiga: "Davo Bread with Butter",
+        pao_davo_fiambre: "Davo Bread with Ham",
+        pao_davo_queijo: "Davo Bread with Cheese",
+        pao_davo_queijo_fiambre: "Davo Bread with Cheese and Ham",
+        sagadinhos: "Sagadinhos",
+        bolos_diversos: "Assorted Cakes",
+        pankeke: "Pankeke",
+        croissants: "Croissants",
+        croissant_manteiga: "Butter Croissant",
+        croissant_queijo: "Cheese Croissant",
+        croissant_misto: "Mixed Croissant"
+    },
+    es: {
+        title: "Pina Bar - Menú",
+        main_title: "Pina Bar - Menú",
+        iva: "IVA incluido a la tarifa legal",
+        copyright: "© 2025 Pina Bar. Todos los derechos reservados.",
+        cafeteria: "Cafetería",
+        aguas_sumos: "Aguas & Zumos",
+        snacks_petiscos: "Snacks & Aperitivos",
+        cerveja: "Cerveza",
+        whiskey: "Whiskey",
+        aguardentes: "Aguardentes",
+        brandys_espirituosas: "Brandies & Espíritus",
+        sangrias: "Sangrías",
+        crepes_gofres: "Crepes & Waffles",
+        sandes_tostas: "Sándwiches & Tostadas",
+        pao_pastelaria: "Pan & Pastelería",
+        cafe: "Café",
+        "cafe_gelo": "Café con hielo",
+        cha: "Té",
+        meia_leite: "Medio litro",
+        galao: "Galão",
+        carioca: "Carioca con café o limón",
+        carioca_duplo: "Carioca doble",
+        cappuccino: "Cappuccino",
+        "chocolate_quente": "Chocolate caliente",
+        ucal: "UCAL",
+        pingo: "Pingo",
+        agua_sem_gas: "Agua sin gas",
+        agua_com_gas: "Agua con gas",
+        agua_sabores: "Agua con sabores",
+        sumos_lata: "Zumos en lata",
+        sumos_nectar: "Zumos néctar",
+        sumos_sem_gas: "Zumos sin gas",
+        sumo_natural: "Zumo natural",
+        plemo: "Plemo",
+        ginger_ale: "Ginger Ale",
+        tonica: "Tónica",
+        cachorro: "Perro caliente",
+        cachorro_especial: "Perro caliente especial",
+        tremocos: "Tremoços",
+        amendoins: "Cacahuetes",
+        chocolates: "Chocolates",
+        gomas: "Gomitas",
+        batata_pacote: "Patatas de paquete",
+        chourico_assado: "Chorizo asado con pan",
+        fino: "Fino",
+        caneca: "Taza",
+        tango: "Tango",
+        favalos_cerveja: "Favalos con cerveza",
+        mini: "Mini",
+        cerveja_33: "0,33cl blanca/negra",
+        bohemia: "Bohemia",
+        heineken: "Heineken",
+        desperados: "Desperados",
+        bandida_pomar: "Bandida do Pomar",
+        black_label: "Black Label",
+        jb_15: "J&amp;B 15 años",
+        jack_daniels: "Jack Daniel's",
+        jameson: "Jameson",
+        red_label: "Red Label",
+        cutty_sark: "Cutty Sark",
+        jb_bravo: "J&amp;B Bravo",
+        william_lawson: "William Lawson",
+        macieira: "Macieira",
+        croft: "Croft",
+        crf: "CRF",
+        safari: "Safari",
+        malibu: "Malibu",
+        beirao: "Beirão",
+        amendoa_amarga: "Almendra amarga",
+        porto_velho: "Oporto viejo",
+        porto_novo: "Oporto nuevo",
+        martini_rosso: "Martini Rosso",
+        martini_branco: "Martini Branco",
+        vodka: "Vodka",
+        vodka_preta: "Vodka negra",
+        bacardi: "Bacardi",
+        gordons: "Gordons",
+        tanqueray: "Tanqueray",
+        bulldog: "Bulldog",
+        capirinha: "Caipirinha",
+        caipiroska: "Caipiroska",
+        mojito: "Mojito",
+        cuba_libre: "Cuba-libre",
+        pina_colada: "Pina Colada",
+        martini_expresso: "Martini Expresso",
+        daquiri_morango: "Daquiri de Fresa",
+        shot: "Shot",
+        red_bull: "Red Bull",
+        monster: "Monster",
+        le_coq: "Le Coq",
+        smirnoff_ice: "Smirnoff Ice",
+        crepe_simples: "Crepe simple con azúcar y canela",
+        crepe_topping: "Crepe de chocolate, fresa o caramelo con cobertura",
+        crepe_topping_chantilly: "Crepe de chocolate, fresa o caramelo con cobertura y nata",
+        gofre_chantilly: "Gofre con nata",
+        gofre_topping: "Gofre chocolate, fresa o caramelo",
+        gofre_topping_chantilly: "Gofre de chocolate, fresa o caramelo con nata",
+        sande_americana: "Sándwich americano",
+        sande_atum: "Sándwich de atún",
+        sande_delicias_mar: "Sándwich de delicias del mar",
+        sande_presunto: "Sándwich de jamón",
+        sande_queijo_presunto: "Sándwich de queso y jamón",
+        hamburguer_classico: "Hamburguesa Clásica",
+        hamburguer_crunch: "Hamburguesa Crunch",
+        tosta_queijo: "Tostada de queso",
+        tosta_queijo_fiambre: "Tostada de queso con jamón",
+        tosta_mista_pao_saloio: "Tostada mixta en pan saloio",
+        torrada_pao_saloio: "Tostada de pan saloio",
+        meia_torrada_pao_saloio: "½ Tostada de pan saloio",
+        pao_alho: "Pan de ajo",
+        pao_alho_especial: "Pan de ajo especial",
+        pao_alho_queijo: "Pan de ajo con queso",
+        pao_davo_manteiga: "Pan davó con mantequilla",
+        pao_davo_fiambre: "Pan davó con jamón",
+        pao_davo_queijo: "Pan davó con queso",
+        pao_davo_queijo_fiambre: "Pan davó con queso y jamón",
+        sagadinhos: "Sagadinhos",
+        bolos_diversos: "Pasteles variados",
+        pankeke: "Pankeke",
+        croissants: "Croissants",
+        croissant_manteiga: "Croissant con mantequilla",
+        croissant_queijo: "Croissant con queso",
+        croissant_misto: "Croissant mixto"
+    }
 };
 
 function setLang(lang) {
     document.documentElement.lang = lang;
-    // Título da página
     document.title = translations[lang].title;
-    // Header principal
     document.getElementById('main-title').textContent = translations[lang].main_title;
-    // IVA e copyright
     document.getElementById('iva-text').textContent = translations[lang].iva;
     document.getElementById('copyright').textContent = translations[lang].copyright;
-    // Secções e itens
     document.querySelectorAll('[data-key]').forEach(function(el) {
         var key = el.getAttribute('data-key');
         if (translations[lang][key]) {
@@ -622,22 +665,22 @@ function setLang(lang) {
 
 function chooseLang(lang) {
     setLang(lang);
-    document.getElementById('lang-modal').style.display = 'none';
+    var modal = document.getElementById('lang-modal');
+    if (modal) modal.style.display = 'none';
 }
 
-// Fecha o modal se já houver idioma guardado (opcional: pode guardar em localStorage se quiser lembrar)
-window.onload = function() {
-    document.getElementById('search-input').value = '';
-    document.getElementById('lang-modal').style.display = 'flex';
-};
+window.addEventListener('DOMContentLoaded', function() {
+    document.body.classList.add('static-bg');
+    var modal = document.getElementById('lang-modal');
+    if (modal) modal.style.display = 'flex';
+    var search = document.getElementById('search-input');
+    if (search) search.value = '';
+});
 
-// Pesquisa dinâmica
 function filterMenu() {
     var input = document.getElementById('search-input').value.trim().toLowerCase();
-    // Para cada secção
     document.querySelectorAll('.section').forEach(function(section) {
         var hasVisible = false;
-        // Para cada item da secção
         section.querySelectorAll('.item').forEach(function(item) {
             var name = item.querySelector('.item-name').textContent.toLowerCase();
             if (name.indexOf(input) !== -1) {
@@ -647,7 +690,6 @@ function filterMenu() {
                 item.style.display = 'none';
             }
         });
-        // Mostra ou esconde o título da secção conforme existam itens visíveis
         section.style.display = hasVisible ? '' : 'none';
     });
 }
