@@ -34,7 +34,10 @@ h3 {
 }
 
 .item {
-    padding: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -43,10 +46,14 @@ h3 {
 }
 
 .item-name {
-    font-weight: bold;
+    /* Espaço flexível para o nome */
+    flex: 1;
+    text-align: left;
 }
 
 .item-price {
+    min-width: 60px;
+    text-align: right;
     color: #d6a600; /* Mustard yellow for prices */
     font-weight: bold;
 }
