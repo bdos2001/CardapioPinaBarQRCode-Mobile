@@ -1,5 +1,5 @@
 body {
-    font-family: 'Georgia', 'Times New Roman', Times, serif;
+    font-family: 'Georgia', 'Times New Roman', Times, serif !important;
     margin: 0;
     padding: 0;
     /* Fundo tipo ardósia de giz: gradiente escuro + textura de ruído SVG */
@@ -11,6 +11,10 @@ body {
     background-repeat: repeat;
     background-position: center;
     color: white;
+}
+
+h1, h2, h3, .logo-title, .go-menu-btn, .slider-dot, .slider-arrow, button, input, .item-name, .item-price {
+    font-family: 'Georgia', 'Times New Roman', Times, serif !important;
 }
 
 h1, h2, h3 {
