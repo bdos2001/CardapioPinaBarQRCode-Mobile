@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pina Bar</title>
     <link rel="stylesheet" href="main.css">
+    <link rel="icon" type="image/jpeg" href="img/logo.jpg">
     <style>
         body {
             min-height: 100vh;
@@ -183,12 +184,7 @@
 <body>
     <div class="logo-title">Pina Bar</div>
     <div class="slider-container" id="slider">
-        <!-- Adicione/remova imagens conforme desejar -->
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80" class="slider-img active" alt="Ambiente do bar">
-        <img src="https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=1200&q=80" class="slider-img" alt="Bebidas">
-        <img src="https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=1200&q=80" class="slider-img" alt="Petiscos">
-        <!-- Exemplo de adicionar mais imagens: -->
-        <!-- <img src="URL_DA_IMAGEM" class="slider-img" alt="Descrição"> -->
+        <!-- As imagens serão inseridas via JavaScript -->
         <button class="slider-arrow left" id="slider-arrow-left">&#8592;</button>
         <button class="slider-arrow right" id="slider-arrow-right">&#8594;</button>
         <div class="slider-dots" id="slider-dots"></div>
@@ -199,18 +195,60 @@
     <div class="modal-festa-bg" id="modal-festa" style="display:flex;">
         <div class="modal-festa-content">
             <!-- Substitua o src abaixo pela imagem/cartaz da próxima festa -->
-            <img src="https://via.placeholder.com/600x400?text=Cartaz+Próxima+Festa" alt="Cartaz Próxima Festa">
+            <img src="cartazesPopup/8639e71f-e16d-4f31-832b-93e5d7395407.jpg" alt="Cartaz Próxima Festa">
             <button class="modal-festa-close" onclick="document.getElementById('modal-festa').style.display='none'">Fechar</button>
         </div>
     </div>
 
     <script>
-        // Slider com setas e dots
-        const imgs = document.querySelectorAll('.slider-img');
+        // Lista de imagens da pasta img (adicione/remova conforme necessário)
+        const imageFiles = [
+            "img/1.jpg",
+            "img/2.jpg",
+            "img/3.jpg",
+            "img/4.jpg",
+            "img/5.jpg"
+            // Adicione aqui todos os nomes das imagens que quiser mostrar
+        ];
+
+        // Embaralhar array de imagens
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        const shuffledImages = shuffle([...imageFiles]);
+        const slider = document.getElementById('slider');
+        // Remover imagens existentes (caso existam)
+        document.querySelectorAll('.slider-img').forEach(e => e.remove());
+
+        // Adicionar imagens ao slider
+        shuffledImages.forEach((src, i) => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.className = 'slider-img' + (i === 0 ? ' active' : '');
+            img.alt = 'Foto do bar ' + (i + 1);
+            slider.insertBefore(img, slider.querySelector('.slider-arrow.left'));
+        });
+
+        // Slider com setas e dots (adaptado para imagens dinâmicas)
+        const imgs = slider.querySelectorAll('.slider-img');
         const dotsContainer = document.getElementById('slider-dots');
         const leftArrow = document.getElementById('slider-arrow-left');
         const rightArrow = document.getElementById('slider-arrow-right');
         let idx = 0, intervalId;
+
+        // Limpar dots antigos
+        dotsContainer.innerHTML = '';
+        imgs.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => { stopAuto(); showSlide(i); startAuto(); };
+            dotsContainer.appendChild(dot);
+        });
 
         function showSlide(i) {
             imgs[idx].classList.remove('active');
@@ -227,13 +265,6 @@
         function stopAuto() {
             clearInterval(intervalId);
         }
-        // Dots
-        imgs.forEach((_, i) => {
-            const dot = document.createElement('button');
-            dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
-            dot.onclick = () => { stopAuto(); showSlide(i); startAuto(); };
-            dotsContainer.appendChild(dot);
-        });
         leftArrow.onclick = () => { stopAuto(); prevSlide(); startAuto(); };
         rightArrow.onclick = () => { stopAuto(); nextSlide(); startAuto(); };
         startAuto();
