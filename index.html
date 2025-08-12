@@ -98,6 +98,9 @@
             border: none;
             cursor: pointer;
             transition: background 0.2s;
+            display: block;
+            aspect-ratio: 1/1;
+            transform: translateZ(0); /* Force hardware acceleration */
         }
         @media (max-width: 900px) {
             .slider-dot {
