@@ -9,15 +9,12 @@
     <style>
         body {
             min-height: 100vh;
-            margin: 0;
-            font-family: 'Georgia', 'Times New Roman', Times, serif;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: stretch;
         }
         .logo-title {
-            font-family: 'Georgia', serif;
             font-size: 2.2rem;
             color: #d6a600;
             margin: 32px 0 16px 0;
@@ -33,7 +30,6 @@
             border-radius: 0;
             overflow: hidden;
             box-shadow: 0 4px 32px rgba(0,0,0,0.25);
-            background: #232526;
             position: relative;
             display: flex;
             align-items: center;
@@ -48,7 +44,7 @@
             left: 0; top: 0;
             opacity: 0;
             transition: opacity 1s;
-            background-color: #232526; /* Background color to fill empty space */
+            background-color: transparent; /* Removed background to avoid double opacity effect */
         }
         .slider-img.active {
             opacity: 1;
@@ -109,7 +105,6 @@
             margin: 32px auto 0 auto;
             padding: 14px 36px;
             font-size: 1.2rem;
-            font-family: 'Georgia', 'Times New Roman', Times, serif;
             border-radius: 8px;
             border: none;
             background: #d6a600;
@@ -192,47 +187,23 @@
     </div>
     <a href="menu.html"><button class="go-menu-btn">Ver Cardápio</button></a>
 
-    <!-- Modal Festa Placeholder -->
-    <div class="modal-festa-bg" id="modal-festa" style="display:flex;">
-        <div class="modal-festa-content">
-            <!-- Substitua o src abaixo pela imagem/cartaz da próxima festa -->
-            <img src="cartazesPopup/8639e71f-e16d-4f31-832b-93e5d7395407.jpg" alt="Cartaz Próxima Festa">
-            <button class="modal-festa-close" onclick="document.getElementById('modal-festa').style.display='none'">Fechar</button>
-        </div>
+    <!-- Container para múltiplos popups -->
+    <div id="popups-container">
+        <!-- Popups serão inseridos dinamicamente via JavaScript -->
     </div>
 
     <script>
         // Lista de imagens da pasta img (todas as imagens numeradas, exceto logo.jpg)
         const imageFiles = [
-            "img/1.jpg",
-            "img/2.jpg",
-            "img/3.jpg",
-            "img/4.jpg",
-            "img/5.jpg",
-            "img/6.jpg",
-            "img/7.jpg",
-            "img/8.jpg",
-            "img/9.jpg",
-            "img/10.jpg",
-            "img/11.jpg",
-            "img/12.jpg",
-            "img/13.jpg",
-            "img/14.jpg",
-            "img/15.jpg",
-            "img/16.jpg",
-            "img/17.jpg",
-            "img/18.jpg",
-            "img/19.jpg",
-            "img/20.jpg",
-            "img/21.jpg",
-            "img/22.jpg",
-            "img/23.jpg",
-            "img/24.jpg",
-            "img/25.jpg",
+            "img/1.jpg", "img/2.jpg", "img/3.jpg", "img/4.jpg", "img/5.jpg",
+            "img/6.jpg", "img/7.jpg", "img/8.jpg", "img/9.jpg", "img/10.jpg",
+            "img/11.jpg", "img/12.jpg", "img/13.jpg", "img/14.jpg", "img/15.jpg",
+            "img/16.jpg", "img/17.jpg", "img/18.jpg", "img/19.jpg", "img/20.jpg",
+            "img/21.jpg", "img/22.jpg", "img/23.jpg", "img/24.jpg", "img/25.jpg",
             "img/26.jpg"
         ];
 
-        // Embaralhar array de imagens
+        // Função para embaralhar array
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -241,58 +212,175 @@
             return array;
         }
 
-        const shuffledImages = shuffle([...imageFiles]);
-        const slider = document.getElementById('slider');
-        // Remover imagens existentes (caso existam)
-        document.querySelectorAll('.slider-img').forEach(e => e.remove());
+        // Configuração do slider de imagens
+        function setupImageSlider() {
+            const shuffledImages = shuffle([...imageFiles]);
+            const slider = document.getElementById('slider');
 
-        // Adicionar imagens ao slider
-        shuffledImages.forEach((src, i) => {
-            const img = document.createElement('img');
-            img.src = src;
-            img.className = 'slider-img' + (i === 0 ? ' active' : '');
-            img.alt = 'Foto do bar ' + (i + 1);
-            slider.insertBefore(img, slider.querySelector('.slider-arrow.left'));
-        });
+            // Remover imagens existentes (caso existam)
+            document.querySelectorAll('.slider-img').forEach(e => e.remove());
 
-        // Slider com setas e dots (adaptado para imagens dinâmicas)
-        const imgs = slider.querySelectorAll('.slider-img');
-        const dotsContainer = document.getElementById('slider-dots');
-        const leftArrow = document.getElementById('slider-arrow-left');
-        const rightArrow = document.getElementById('slider-arrow-right');
-        let idx = 0, intervalId;
+            // Adicionar imagens ao slider
+            shuffledImages.forEach((src, i) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'slider-img' + (i === 0 ? ' active' : '');
+                img.alt = 'Foto do bar ' + (i + 1);
+                slider.insertBefore(img, slider.querySelector('.slider-arrow.left'));
+            });
 
-        // Limpar dots antigos
-        dotsContainer.innerHTML = '';
-        imgs.forEach((_, i) => {
-            const dot = document.createElement('button');
-            dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
-            dot.onclick = () => { stopAuto(); showSlide(i); startAuto(); };
-            dotsContainer.appendChild(dot);
-        });
+            // Configurar controles do slider
+            const imgs = slider.querySelectorAll('.slider-img');
+            const dotsContainer = document.getElementById('slider-dots');
+            const leftArrow = document.getElementById('slider-arrow-left');
+            const rightArrow = document.getElementById('slider-arrow-right');
+            let idx = 0, intervalId;
 
-        function showSlide(i) {
-            imgs[idx].classList.remove('active');
-            dotsContainer.children[idx].classList.remove('active');
-            idx = (i + imgs.length) % imgs.length;
-            imgs[idx].classList.add('active');
-            dotsContainer.children[idx].classList.add('active');
+            // Limpar dots antigos
+            dotsContainer.innerHTML = '';
+            imgs.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+                dot.onclick = () => { stopAuto(); showSlide(i); startAuto(); };
+                dotsContainer.appendChild(dot);
+            });
+
+            function showSlide(i) {
+                imgs[idx].classList.remove('active');
+                dotsContainer.children[idx].classList.remove('active');
+                idx = (i + imgs.length) % imgs.length;
+                imgs[idx].classList.add('active');
+                dotsContainer.children[idx].classList.add('active');
+            }
+
+            function nextSlide() { showSlide(idx + 1); }
+            function prevSlide() { showSlide(idx - 1); }
+
+            function startAuto() {
+                intervalId = setInterval(nextSlide, 4000);
+            }
+
+            function stopAuto() {
+                clearInterval(intervalId);
+            }
+
+            leftArrow.onclick = () => { stopAuto(); prevSlide(); startAuto(); };
+            rightArrow.onclick = () => { stopAuto(); nextSlide(); startAuto(); };
+            startAuto();
         }
-        function nextSlide() { showSlide(idx + 1); }
-        function prevSlide() { showSlide(idx - 1); }
-        function startAuto() {
-            intervalId = setInterval(nextSlide, 4000);
-        }
-        function stopAuto() {
-            clearInterval(intervalId);
-        }
-        leftArrow.onclick = () => { stopAuto(); prevSlide(); startAuto(); };
-        rightArrow.onclick = () => { stopAuto(); nextSlide(); startAuto(); };
-        startAuto();
 
-        // Modal Festa: fecha ao clicar fora do conteúdo
-        document.getElementById('modal-festa').addEventListener('click', function(e) {
-            if (e.target === this) this.style.display = 'none';
+        // Função para carregar imagens da pasta cartazesPopup
+        function loadPopupImages() {
+            // Lista de extensões de imagem comuns
+            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+
+            // Fazer uma requisição para obter a lista de arquivos na pasta cartazesPopup
+            fetch('cartazesPopup/')
+                .then(response => response.text())
+                .then(html => {
+                    // Extrair nomes de arquivos do HTML retornado
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const links = Array.from(doc.querySelectorAll('a'));
+
+                    // Filtrar apenas arquivos de imagem
+                    const imageFiles = links
+                        .map(link => link.getAttribute('href'))
+                        .filter(href => {
+                            if (!href) return false;
+                            const lowerHref = href.toLowerCase();
+                            return imageExtensions.some(ext => lowerHref.endsWith(ext));
+                        })
+                        .map(href => 'cartazesPopup/' + href);
+
+                    // Se encontrou imagens, mostrar todas como popups
+                    if (imageFiles.length > 0) {
+                        createPopups(imageFiles);
+                    } else {
+                        // Fallback para o método alternativo se o fetch não funcionar
+                        createDefaultPopups();
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar imagens de popup:', error);
+                    createDefaultPopups();
+                });
+        }
+
+        // Função para criar popups para todas as imagens
+        function createPopups(imageFiles) {
+            if (!imageFiles || imageFiles.length === 0) return;
+
+            const popupsContainer = document.getElementById('popups-container');
+
+            // Limpar popups existentes
+            popupsContainer.innerHTML = '';
+
+            // Criar um popup para cada imagem
+            imageFiles.forEach((imageSrc, index) => {
+                // Calcular o z-index para criar o efeito de sobreposição
+                // O primeiro popup terá o z-index mais alto
+                const zIndex = 10000 - index;
+
+                // Criar o elemento de fundo do popup
+                const popupBg = document.createElement('div');
+                popupBg.className = 'modal-festa-bg';
+                popupBg.style.zIndex = zIndex;
+                popupBg.style.display = 'flex';
+
+                // Criar o conteúdo do popup
+                const popupContent = document.createElement('div');
+                popupContent.className = 'modal-festa-content';
+
+                // Criar a imagem
+                const img = document.createElement('img');
+                img.src = imageSrc;
+                img.alt = 'Cartaz ' + (index + 1);
+
+                // Criar o botão de fechar
+                const closeButton = document.createElement('button');
+                closeButton.className = 'modal-festa-close';
+                closeButton.textContent = 'Fechar';
+                closeButton.onclick = function() {
+                    popupBg.style.display = 'none';
+                };
+
+                // Montar o popup
+                popupContent.appendChild(img);
+                popupContent.appendChild(closeButton);
+                popupBg.appendChild(popupContent);
+
+                // Adicionar evento para fechar ao clicar fora do conteúdo
+                popupBg.addEventListener('click', function(e) {
+                    if (e.target === this) this.style.display = 'none';
+                });
+
+                // Adicionar o popup ao container
+                popupsContainer.appendChild(popupBg);
+
+                // Adicionar um pequeno deslocamento para cada popup
+                // para criar um efeito visual de sobreposição
+                popupContent.style.marginTop = (index * 10) + 'px';
+                popupContent.style.marginLeft = (index * 10) + 'px';
+            });
+        }
+
+        // Método alternativo para criar popups (usado como fallback)
+        function createDefaultPopups() {
+            // Listar manualmente as imagens na pasta cartazesPopup
+            const popupImages = ['cartazesPopup/8639e71f-e16d-4f31-832b-93e5d7395407.jpg'];
+
+            // Adicionar qualquer outra imagem que possa existir na pasta
+            // Este array será atualizado automaticamente quando novas imagens forem adicionadas
+            // ao código durante a manutenção do site
+
+            createPopups(popupImages);
+        }
+
+        // Inicializar componentes
+        document.addEventListener('DOMContentLoaded', function() {
+            setupImageSlider();
+            loadPopupImages();
         });
     </script>
 </body>
