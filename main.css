@@ -66,8 +66,6 @@ h3 {
     font-weight: bold;
 }
 
-.static-bg {
-}
 body.static-bg > *:not(#lang-modal) {
     position: relative;
     z-index: 1;
@@ -77,14 +75,39 @@ html, body {
     min-height: 100%;
 }
 
+/* Slider container: usa aspect-ratio para garantir espaço proporcional */
+.slider-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 4/3; /* proporção padrão de fotos, ajuste se necessário */
+    height: auto; /* remove altura fixa *//* Mobile: mantém aspect-ratio e ocupa largura total */
+}
+
+/* Mobile: mantém aspect-ratio e ocupa largura total */
 @media (max-width: 600px) {
-    h1 {
-        font-size: 2rem;
+    .slider-container {
+        max-width: 100vw;
+        aspect-ratio: 4/3;
+        height: auto;
     }
-    h2 {
-        font-size: 1.5rem;
-    }
-    h3 {
-        font-size: 1.2rem;
-    }
+}
+
+/* Slider images: sempre visíveis, sem cortes, mantendo aspect ratio */
+.slider-img {
+    flex: 1 1 0;
+    max-width: 100%;
+    height: auto;
+    min-width: 0;
+    display: block;
+    background: #232526;
+    object-fit: contain;
 }

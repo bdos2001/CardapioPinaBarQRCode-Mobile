@@ -43,11 +43,12 @@
             width: 100vw;
             height: 100%;
             max-height: 60vh;
-            object-fit: cover;
+            object-fit: contain;
             position: absolute;
             left: 0; top: 0;
             opacity: 0;
             transition: opacity 1s;
+            background-color: #232526; /* Background color to fill empty space */
         }
         .slider-img.active {
             opacity: 1;
@@ -201,14 +202,34 @@
     </div>
 
     <script>
-        // Lista de imagens da pasta img (adicione/remova conforme necessário)
+        // Lista de imagens da pasta img (todas as imagens numeradas, exceto logo.jpg)
         const imageFiles = [
             "img/1.jpg",
             "img/2.jpg",
             "img/3.jpg",
             "img/4.jpg",
-            "img/5.jpg"
-            // Adicione aqui todos os nomes das imagens que quiser mostrar
+            "img/5.jpg",
+            "img/6.jpg",
+            "img/7.jpg",
+            "img/8.jpg",
+            "img/9.jpg",
+            "img/10.jpg",
+            "img/11.jpg",
+            "img/12.jpg",
+            "img/13.jpg",
+            "img/14.jpg",
+            "img/15.jpg",
+            "img/16.jpg",
+            "img/17.jpg",
+            "img/18.jpg",
+            "img/19.jpg",
+            "img/20.jpg",
+            "img/21.jpg",
+            "img/22.jpg",
+            "img/23.jpg",
+            "img/24.jpg",
+            "img/25.jpg",
+            "img/26.jpg"
         ];
 
         // Embaralhar array de imagens
