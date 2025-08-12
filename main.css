@@ -4,7 +4,7 @@ body {
     padding: 0;
     /* Background image fixed on scroll */
     background: url('img/background.jpg');
-    background-size: cover;
+    background-size: auto; /* Changed from 'cover' to 'auto' to maintain original size */
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed; /* This makes the background stay fixed when scrolling */
