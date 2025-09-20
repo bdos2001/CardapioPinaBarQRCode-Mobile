@@ -2,202 +2,120 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Pina Bar - Cardápio completo do Pina Bar">
-    <meta name="keywords" content="Pina Bar, cardápio Pina Bar, menu Pina Bar, bebidas Pina Bar, petiscos, cocktails, cerveja, café, Pina, bar Lisboa">
-    <title>Pina Bar - Cardápio</title>
-    <link rel="stylesheet" href="main.css">
-    <link rel="icon" type="image/jpeg" href="img/logo.jpg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cardápio Pina Bar</title>
     <style>
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
         }
+        
+        /* PDF container styles */
         .pdf-container {
             width: 100%;
-            max-width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
+        
         .pdf-viewer {
             width: 100%;
             height: 100%;
             border: none;
         }
-        /* Modal styles for popups */
-        .modal-festa-bg {
+        
+        /* Overlay styles */
+        .overlay {
             position: fixed;
-            z-index: 10000;
-            left: 0; top: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
             display: flex;
-            align-items: center;
             justify-content: center;
-        }
-        .modal-festa-content {
-            background: #232526;
-            border-radius: 16px;
-            padding: 24px 16px 16px 16px;
-            box-shadow: 0 4px 32px #000a;
-            max-width: 95vw;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
             align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
         }
-        .modal-festa-content img {
-            max-width: 80vw;
-            max-height: 60vh;
-            border-radius: 12px;
-            box-shadow: 0 2px 16px #000a;
-            margin-bottom: 16px;
+        
+        .overlay-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
         }
-        .modal-festa-close {
-            margin-top: 8px;
-            padding: 8px 24px;
-            font-size: 1rem;
+        
+        .overlay-image {
+            max-width: 100%;
+            max-height: 90vh;
+            display: block;
             border-radius: 8px;
-            border: none;
-            background: #d6a600;
-            color: #232526;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s, color 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
-        .modal-festa-close:hover {
-            background: #232526;
-            color: #d6a600;
+        
+        .close-button {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
         }
     </style>
 </head>
 <body>
+    <!-- PDF Viewer -->
     <div class="pdf-container">
-        <iframe class="pdf-viewer" src="menu.pdf" title="Cardápio Pina Bar"></iframe>
+        <iframe class="pdf-viewer" src="menu.pdf"></iframe>
     </div>
-
-    <!-- Container for popups -->
-    <div id="popups-container">
-        <!-- Popups will be inserted dynamically via JavaScript -->
+    
+    <!-- Overlay with popup image -->
+    <div class="overlay" id="imageOverlay">
+        <div class="overlay-content">
+            <div class="close-button" onclick="closeOverlay()">×</div>
+            <img class="overlay-image" src="cartazesPopup/8639e71f-e16d-4f31-832b-93e5d7395407.jpg" alt="Promoção Especial">
+        </div>
     </div>
 
     <script>
-        // Function to load images from cartazesPopup folder
-        function loadPopupImages() {
-            // List of common image extensions
-            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-
-            // Make a request to get the list of files in the cartazesPopup folder
-            fetch('cartazesPopup/')
-                .then(response => response.text())
-                .then(html => {
-                    // Extract filenames from the returned HTML
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const links = Array.from(doc.querySelectorAll('a'));
-
-                    // Filter only image files
-                    const imageFiles = links
-                        .map(link => link.getAttribute('href'))
-                        .filter(href => {
-                            if (!href) return false;
-                            const lowerHref = href.toLowerCase();
-                            return imageExtensions.some(ext => lowerHref.endsWith(ext));
-                        })
-                        .map(href => 'cartazesPopup/' + href);
-
-                    // If images were found, show them as popups
-                    if (imageFiles.length > 0) {
-                        createPopups(imageFiles);
-                    } else {
-                        // Fallback to alternative method if fetch doesn't work
-                        createDefaultPopups();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading popup images:', error);
-                    createDefaultPopups();
-                });
+        // Function to close the overlay
+        function closeOverlay() {
+            document.getElementById('imageOverlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('imageOverlay').style.display = 'none';
+            }, 300);
         }
-
-        // Function to create popups for all images
-        function createPopups(imageFiles) {
-            if (!imageFiles || imageFiles.length === 0) return;
-
-            const popupsContainer = document.getElementById('popups-container');
-
-            // Clear existing popups
-            popupsContainer.innerHTML = '';
-
-            // Create a popup for each image
-            imageFiles.forEach((imageSrc, index) => {
-                // Calculate z-index to create overlay effect
-                // First popup will have highest z-index
-                const zIndex = 10000 - index;
-
-                // Create popup background element
-                const popupBg = document.createElement('div');
-                popupBg.className = 'modal-festa-bg';
-                popupBg.style.zIndex = zIndex;
-                popupBg.style.display = 'flex';
-
-                // Create popup content
-                const popupContent = document.createElement('div');
-                popupContent.className = 'modal-festa-content';
-
-                // Create image
-                const img = document.createElement('img');
-                img.src = imageSrc;
-                img.alt = 'Cartaz ' + (index + 1);
-
-                // Create close button
-                const closeButton = document.createElement('button');
-                closeButton.className = 'modal-festa-close';
-                closeButton.textContent = 'Fechar';
-                closeButton.onclick = function() {
-                    popupBg.style.display = 'none';
-                };
-
-                // Assemble popup
-                popupContent.appendChild(img);
-                popupContent.appendChild(closeButton);
-                popupBg.appendChild(popupContent);
-
-                // Add event to close when clicking outside content
-                popupBg.addEventListener('click', function(e) {
-                    if (e.target === this) this.style.display = 'none';
-                });
-
-                // Add popup to container
-                popupsContainer.appendChild(popupBg);
-
-                // Add small offset for each popup
-                // to create visual overlay effect
-                popupContent.style.marginTop = (index * 10) + 'px';
-                popupContent.style.marginLeft = (index * 10) + 'px';
-            });
-        }
-
-        // Alternative method to create popups (used as fallback)
-        function createDefaultPopups() {
-            // Manually list images in cartazesPopup folder
-            const popupImages = ['cartazesPopup/8639e71f-e16d-4f31-832b-93e5d7395407.jpg'];
-
-            // Add any other images that might exist in the folder
-            // This array will be automatically updated when new images are added
-            // to the code during site maintenance
-
-            createPopups(popupImages);
-        }
-
-        // Initialize components
-        document.addEventListener('DOMContentLoaded', function() {
-            loadPopupImages();
+        
+        // Also close overlay when clicking anywhere on it
+        document.getElementById('imageOverlay').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeOverlay();
+            }
         });
+        
+        // Prevent scrolling when overlay is open
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Allow scrolling after overlay is closed
+        function enableScroll() {
+            document.body.style.overflow = '';
+        }
     </script>
 </body>
 </html>
