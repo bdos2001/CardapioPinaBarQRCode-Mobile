@@ -2,8 +2,10 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Cardápio Pina Bar</title>
+    <!-- PDF.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
         body, html {
             margin: 0;
@@ -11,9 +13,11 @@
             height: 100%;
             width: 100%;
             font-family: Arial, sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background-color: #f5f5f5;
         }
-        
+
         /* PDF container styles */
         .pdf-container {
             width: 100%;
@@ -21,14 +25,77 @@
             position: absolute;
             top: 0;
             left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            padding-bottom: 70px; /* Space for controls */
         }
-        
-        .pdf-viewer {
+
+        #pdf-viewer {
             width: 100%;
-            height: 100%;
-            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        
+
+        /* Loading indicator */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            z-index: 50;
+        }
+
+        .page-container {
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            width: 100%;
+            max-width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .page-container canvas {
+            width: 100% !important;
+            height: auto !important;
+            max-width: 100%;
+        }
+
+        /* Navigation controls */
+        .pdf-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .pdf-controls button {
+            background-color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         /* Overlay styles */
         .overlay {
             position: fixed;
@@ -43,13 +110,13 @@
             z-index: 1000;
             transition: opacity 0.3s ease;
         }
-        
+
         .overlay-content {
             position: relative;
             max-width: 90%;
             max-height: 90%;
         }
-        
+
         .overlay-image {
             max-width: 100%;
             max-height: 90vh;
@@ -57,7 +124,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
-        
+
         .close-button {
             position: absolute;
             top: -15px;
@@ -80,9 +147,16 @@
 <body>
     <!-- PDF Viewer -->
     <div class="pdf-container">
-        <iframe class="pdf-viewer" src="menu.pdf"></iframe>
+        <div id="pdf-viewer"></div>
+        <div id="loading" class="loading">Carregando menu...</div>
+        <div class="pdf-controls">
+            <button id="prev-page" title="Página anterior">◀</button>
+            <button id="next-page" title="Próxima página">▶</button>
+            <button id="zoom-in" title="Aumentar zoom">+</button>
+            <button id="zoom-out" title="Diminuir zoom">-</button>
+        </div>
     </div>
-    
+
     <!-- Overlay with popup image -->
     <div class="overlay" id="imageOverlay">
         <div class="overlay-content">
@@ -92,29 +166,185 @@
     </div>
 
     <script>
+        // Set up PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+        // PDF variables
+        let pdfDoc = null;
+        let pageNum = 1;
+        let pageRendering = false;
+        let pageNumPending = null;
+        // Set initial scale based on device width for better mobile viewing
+        let scale = window.innerWidth < 768 ? 1.5 : 1.0;
+        const pdfViewer = document.getElementById('pdf-viewer');
+        const loadingIndicator = document.getElementById('loading');
+
+        // Detect if device is mobile
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        // Load the PDF
+        function loadPDF() {
+            // Show loading indicator
+            loadingIndicator.style.display = 'block';
+
+            const loadingTask = pdfjsLib.getDocument('menu.pdf');
+            loadingTask.promise.then(function(pdf) {
+                pdfDoc = pdf;
+                // Render all pages
+                renderAllPages();
+            }).catch(function(error) {
+                console.error('Error loading PDF:', error);
+                loadingIndicator.textContent = 'Erro ao carregar o menu. Tente novamente.';
+            });
+        }
+
+        // Render all pages of the PDF
+        function renderAllPages() {
+            pdfViewer.innerHTML = ''; // Clear the viewer
+
+            // Create a promise for each page
+            const pagePromises = [];
+            for (let i = 1; i <= pdfDoc.numPages; i++) {
+                pagePromises.push(renderPage(i));
+            }
+
+            // Wait for all pages to render
+            Promise.all(pagePromises).then(() => {
+                console.log('All pages rendered');
+                // Hide loading indicator when all pages are rendered
+                loadingIndicator.style.display = 'none';
+
+                // Add scroll event listener to update current page
+                window.addEventListener('scroll', updateCurrentPage);
+            }).catch(function(error) {
+                console.error('Error rendering pages:', error);
+                loadingIndicator.textContent = 'Erro ao renderizar páginas. Tente novamente.';
+            });
+        }
+
+        // Update current page based on scroll position
+        function updateCurrentPage() {
+            if (!pdfDoc) return;
+
+            const pageElements = document.querySelectorAll('.page-container');
+            const windowMiddle = window.scrollY + (window.innerHeight / 2);
+
+            for (let i = 0; i < pageElements.length; i++) {
+                const element = pageElements[i];
+                const rect = element.getBoundingClientRect();
+                const elementMiddle = rect.top + (rect.height / 2);
+
+                if (elementMiddle > 0 && elementMiddle < window.innerHeight) {
+                    const newPageNum = i + 1;
+                    if (pageNum !== newPageNum) {
+                        pageNum = newPageNum;
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Render a specific page
+        function renderPage(pageNumber) {
+            return pdfDoc.getPage(pageNumber).then(function(page) {
+                const viewport = page.getViewport({ scale: scale });
+
+                // Create a container for this page
+                const pageContainer = document.createElement('div');
+                pageContainer.className = 'page-container';
+                pageContainer.id = `page-${pageNumber}`;
+                pdfViewer.appendChild(pageContainer);
+
+                // Create a canvas for the page
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                pageContainer.appendChild(canvas);
+
+                // Render the page content
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+
+                return page.render(renderContext).promise;
+            });
+        }
+
+        // Navigation functions
+        document.getElementById('prev-page').addEventListener('click', function() {
+            if (pageNum <= 1) return;
+            pageNum--;
+            document.getElementById(`page-${pageNum}`).scrollIntoView({ behavior: 'smooth' });
+        });
+
+        document.getElementById('next-page').addEventListener('click', function() {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            document.getElementById(`page-${pageNum}`).scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Zoom functions
+        document.getElementById('zoom-in').addEventListener('click', function() {
+            scale += 0.2;
+            renderAllPages();
+        });
+
+        document.getElementById('zoom-out').addEventListener('click', function() {
+            if (scale <= 0.5) return;
+            scale -= 0.2;
+            renderAllPages();
+        });
+
         // Function to close the overlay
         function closeOverlay() {
             document.getElementById('imageOverlay').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('imageOverlay').style.display = 'none';
+                enableScroll();
             }, 300);
         }
-        
+
         // Also close overlay when clicking anywhere on it
         document.getElementById('imageOverlay').addEventListener('click', function(event) {
             if (event.target === this) {
                 closeOverlay();
             }
         });
-        
-        // Prevent scrolling when overlay is open
+
+        // Prevent scrolling when overlay is open and initialize the page
         document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = 'hidden';
+
+            // Set up resize handler for responsive behavior
+            window.addEventListener('resize', function() {
+                // Update scale based on new window width
+                const newScale = window.innerWidth < 768 ? 1.5 : 1.0;
+                if (newScale !== scale) {
+                    scale = newScale;
+                    if (pdfDoc) {
+                        renderAllPages();
+                    }
+                }
+            });
+
+            // Load the PDF after the DOM is ready
+            loadPDF();
         });
-        
+
         // Allow scrolling after overlay is closed
         function enableScroll() {
-            document.body.style.overflow = '';
+            document.body.style.overflow = 'auto';
+
+            // Make sure PDF is properly loaded and visible
+            if (pdfDoc) {
+                // Ensure the first page is visible
+                const firstPage = document.getElementById('page-1');
+                if (firstPage) {
+                    firstPage.scrollIntoView({ behavior: 'auto' });
+                }
+            }
         }
     </script>
 </body>
